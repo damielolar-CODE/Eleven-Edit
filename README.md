@@ -140,6 +140,13 @@ version in use refuses to run Electron's post-install script, run
 generated from the same drawing code as the Windows icon with
 `npm run icons:mac` (needs Pillow).
 
+**Signed + notarised release** (no Gatekeeper prompt for users): once a
+"Developer ID Application" certificate is in the keychain and a `notarytool`
+keychain profile exists (one-time steps documented at the top of
+`scripts/release-mac.sh`), `npm run release:mac` signs with the hardened runtime
+(`build/entitlements.mac.plist`), notarises, staples and verifies both DMGs.
+Without the certificate the build falls back to the ad-hoc signature above.
+
 Tests, no hardware needed: `npm run test:bridge:mac` drives the bridge over
 its WebSocket protocol against a virtual Eleven Rack (identity request, PC/CC,
 a 1300-byte SysEx reassembled whole, error paths, graceful shutdown);

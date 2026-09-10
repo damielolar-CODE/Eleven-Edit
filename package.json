@@ -11,7 +11,8 @@
     "bridge:mac": "bash bridge-macos/build.sh",
     "test:bridge:mac": "bash bridge-macos/tests/run-smoke.sh",
     "icons:mac": "python3 tools/gen_icns.py",
-    "pack": "electron-builder --dir"
+    "pack": "electron-builder --dir",
+    "release:mac": "bash scripts/release-mac.sh"
   },
   "build": {
     "appId": "com.wardick.rigrollerplus",
@@ -57,7 +58,12 @@
           "from": "bridge-macos/ElevenRackBridge",
           "to": "ElevenRackBridge"
         }
-      ]
+      ],
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "notarize": true
     },
     "dmg": {
       "sign": false,
