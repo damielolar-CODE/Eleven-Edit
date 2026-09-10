@@ -3778,6 +3778,29 @@ v1.0.0 — PUBLIC RELEASE (2026-09-09). The final push to main renumbered the
   reserved public-release version. Code complete. No protocol/behaviour change
   in the renumber itself; the dated 1.4.xx entries below remain accurate history.
 
+2026-09-10 (RACK LOOK — Settings > Look: Rack (default) / Classic). New
+  src/css/rack-skin.css (all rules scoped to body.rack-skin: faceplate +
+  fixed rack-ear pseudo-elements, cap-screw corners via layered radial
+  gradients, LCD patch name, LED push-button family, LCD readouts) and
+  src/js/rack-skin.js (Neve "Marconi" knob renderer that REPLACES the global
+  drawTickKnob binding while the skin is on — drawKnob dispatches by name,
+  so every data-style="tick" rotary picks it up with no other change; cap
+  colour by label regex: gate/thresh/release/attack/ratio/comp = grey,
+  vol/gain/boost/drive/level/out/mix/amount/master/send/return/feedback/
+  depth = red, else blue, data-band-color wins; recomputed every paint since
+  tone knobs are re-labelled per amp — caching it painted the wrong colours;
+  canvases are re-scaled to devicePixelRatio on first paint, CSS size
+  pinned). VU meter: canvas #vu-canvas in #topbar, needle = MAIN VOL (CMD
+  0x36) mapped -20..+3 dB on a real VU scale table, +kick per midi_in via a
+  wrapper around the global handleBridgeMsg binding, PEAK LED 140 ms,
+  spring ballistics, rAF loop only while the skin is on. Choice persisted in
+  localStorage 'ee-look' (renderer-side, no IPC). Classic = original CSS
+  untouched. Dev aid main.js --screenshot=<png> [--screenshot-delay=ms]
+  (webContents.capturePage after reveal) — how every look iteration was
+  checked against the real rack. Layout budget at the 1400px default width
+  is tight: ears 22px, VU 132x58, LCD 246px, chain-strip gap 4px — widening
+  any of these clips TUNER/WINDOW or MAIN VOL/TEMPO on the right.
+
 2026-09-10 (MACOS PORT — mac build of v1.0.0; verified on real hardware the
   same day, Rig/Rig ports, fw 0157 — see Sec 1 MACOS PORT).
   New: bridge-macos/ (ElevenRackBridge.swift, build.sh, tests/fake-rack.swift,

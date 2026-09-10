@@ -1270,8 +1270,10 @@
   .rack-save-ok-btn { border-color: var(--green) !important; color: var(--green) !important; }
   .rack-save-ok-btn:hover { background: #0a2a0a !important; }
 </style>
+<!-- Rack skin (2026-09-10): the rack-mounted look, scoped to body.rack-skin (Settings > Look) -->
+<link rel="stylesheet" href="css/rack-skin.css">
 </head>
-<body>
+<body class="rack-skin">
 
 <!-- ══ TOP BAR ══ -->
 <div id="topbar">
@@ -1311,6 +1313,12 @@
   <span id="range-active" style="display:none;"></span>
 
   <div class="tdiv"></div>
+
+  <!-- VU meter (rack skin only; drawn by js/rack-skin.js). Needle = MAIN
+       output volume, twitches on incoming MIDI. Hidden in the Classic look. -->
+  <div id="vu-wrap" title="Main output level (MAIN VOL) — needle twitches on MIDI activity">
+    <canvas id="vu-canvas" width="132" height="58"></canvas>
+  </div>
 
   <!-- Right side controls -->
   <div class="flex-row ml-auto" style="gap:10px;flex-shrink:0;">
@@ -2003,6 +2011,15 @@
     <div class="settings-row">
       <div class="settings-row-controls">
         <button class="settings-btn" id="settings-btn-open-logs">Open Logs Folder</button>
+      </div>
+    </div>
+
+    <div class="settings-row">
+      <div class="settings-row-label">Look</div>
+      <div class="settings-row-controls">
+        <button class="settings-btn settings-look-btn" data-look="rack">Rack</button>
+        <button class="settings-btn settings-look-btn" data-look="classic">Classic</button>
+        <div class="settings-path">Rack: rack-mounted faceplate, Neve-style knobs, VU meter. Classic: the original flat look.</div>
       </div>
     </div>
 
@@ -3689,6 +3706,7 @@ document.getElementById('about-overlay').addEventListener('click', function(e) {
 <script src="js/sysex-handler.js"></script>
 <script src="js/patch-nav.js"></script>
 <script src="js/rig-balance.js"></script>   <!-- Rig Balancing level-matching mode, 2026-08-31 -->
+<script src="js/rack-skin.js"></script>     <!-- Rack look: Neve knobs + VU meter, 2026-09-10 -->
 <script src="js/app-init.js"></script>
 </body>
 </html>

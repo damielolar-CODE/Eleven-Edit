@@ -1184,7 +1184,44 @@ ipcMain.on('splash-hide-gate', function() {
 ipcMain.on('startup-retry-click', function() {
   if (mainWindow) mainWindow.webContents.send('startup-retry-click');
 });
+// ── Dev/docs aid (macOS port, 2026-09-10): --screenshot=<file.png> ──
+// Captures the main window's own rendering (webContents.capturePage —
+// no Screen Recording permission involved) a moment after the reveal and
+// writes a PNG. Optional --screenshot-delay=<ms> (default 1500).
+// e.g.  open -a "Eleven Edit" --args --screenshot=/tmp/ee.png
+const screenshotPath = (function () {
+  const a = process.argv.find(x => /^--screenshot=/.test(String(x)));
+  return a ? String(a).slice('--screenshot='.length) : null;
+})();
+let screenshotJsDone = false;
+const screenshotDelayMs = (function () {
+  const a = process.argv.find(x => /^--screenshot-delay=/.test(String(x)));
+  const n = a ? parseInt(String(a).split('=')[1], 10) : NaN;
+  return Number.isNaN(n) ? 1500 : Math.max(0, n);
+})();
+// Optional --screenshot-js=<expression>: evaluated in the main window
+// ~400 ms before the capture (e.g. "document.getElementById('copen-delay').click()"
+// to shoot an effect panel). Dev aid only; ignored without --screenshot.
+const screenshotJs = (function () {
+  const a = process.argv.find(x => /^--screenshot-js=/.test(String(x)));
+  return a ? String(a).slice('--screenshot-js='.length) : null;
+})();
+function captureMainWindow() {
+  if (!screenshotPath || !mainWindow || mainWindow.isDestroyed()) return;
+  if (screenshotJs && !screenshotJsDone) {
+    const js = screenshotJs; screenshotJsDone = true;
+    mainWindow.webContents.executeJavaScript(js).catch(function(e) { logWrite('screenshot-js error: ' + e.message); });
+    setTimeout(captureMainWindow, 400);
+    return;
+  }
+  mainWindow.webContents.capturePage().then(function(img) {
+    fs.writeFileSync(screenshotPath, img.toPNG());
+    logWrite('Screenshot written: ' + screenshotPath + ' (' + img.getSize().width + 'x' + img.getSize().height + ')');
+  }).catch(function(e) { logWrite('Screenshot failed: ' + e.message); });
+}
+
 ipcMain.on('app-ready', function() {
+  if (screenshotPath) setTimeout(captureMainWindow, screenshotDelayMs);
   // Charlie reported a "massive white flash" at exactly this swap
   // (2026-08-03) — a classic Electron/Windows DWM compositor artifact when
   // a topmost frameless window (splash) is destroyed in the SAME tick a

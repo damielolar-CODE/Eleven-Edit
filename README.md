@@ -165,6 +165,23 @@ jar --create --file ElevenRackBridge.jar --main-class ElevenRackBridge ElevenRac
 This writes `ElevenRackBridge.jar` in the repo root, where `npm run build`
 picks it up. The intermediate `*.class` files can be deleted afterwards.
 
+## Looks
+
+Two looks, switchable under Settings (the gear button) → **Look**, remembered
+between launches:
+
+- **Rack** (default since 2026-09-10) — a rack-mounted faceplate between two
+  rack ears, cap-screwed module panels, a blue backlit LCD for the patch name,
+  push-buttons with LED states, Neve-style knobs (red caps on gain/level
+  controls, blue on tone, grey on dynamics, the band colour on Parametric EQ)
+  and a VU meter in the top bar. The VU needle sits at the MAIN output volume
+  (the rack does not report audio level over MIDI) and twitches on every
+  incoming MIDI message, with a PEAK LED, so it doubles as a live-link
+  indicator. Implemented as `src/css/rack-skin.css` + `src/js/rack-skin.js`,
+  scoped to `body.rack-skin`, on the same DOM and knob code paths.
+- **Classic** — the original flat dark theme, byte-for-byte the pre-skin
+  stylesheet.
+
 ## Startup flags
 
 - `/LOGS` — enable session logging.

@@ -158,6 +158,22 @@ AUTO ADVANCE
   PAUSE and STOP are available at any time.
 
 
+LOOK (RACK / CLASSIC)
+--------------------------------------------------
+
+  Eleven Edit has two looks. The default "Rack" look styles the window as
+  a rack-mounted unit: rack ears, screwed-in panels, a blue LCD showing the
+  patch name, LED push-buttons, Neve-style knobs and a VU meter in the top
+  bar. The knob caps are colour-coded the way a Neve console does it: red
+  for gain and level controls, blue for tone controls, grey for the gate.
+  The VU needle follows the MAIN output volume (the rack does not send
+  audio levels over MIDI) and flicks on every message from the rack, so a
+  moving needle and a blinking PEAK light mean the link is alive.
+
+  Prefer the original flat look? Click the gear button (bottom right),
+  find "Look" and choose Classic. The choice is remembered.
+
+
 SAVING AND LOADING
 --------------------------------------------------
 
