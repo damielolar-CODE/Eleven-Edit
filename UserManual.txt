@@ -78,13 +78,14 @@ see one of these screens instead of the main window:
     happened after it started.
 
   Firmware version mismatch — Eleven Edit is built and tested against
-    Eleven Rack firmware Version 2.0.1, Build 0.1.5.7. If your unit
+    Eleven Rack firmware Version 2.0.1 (Build 0.1.5.7) or Version 2.0
+    (Build 0.1.5.3). If your unit
     reports a different version, this is a one-way stop (no Try Again)
     until a version of Eleven Edit that supports your firmware is
     available.
 
 For reference, everything Eleven Edit checks for at startup:
-  - Eleven Rack firmware Version 2.0.1, Build 0.1.5.7
+  - Eleven Rack firmware Version 2.0.1 (Build 0.1.5.7) or 2.0 (Build 0.1.5.3)
   - Avid Eleven Rack USB driver (version 1.0.11 or 1.1.12, both confirmed working)
   - Java Runtime Environment (JRE), version 25 or higher
 

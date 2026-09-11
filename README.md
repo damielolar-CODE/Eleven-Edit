@@ -82,6 +82,20 @@ coding assistant.
   pair, Eleven Edit tries the other Rig/External combinations once each before
   showing the firmware gate, and remembers whichever pair answered. Intel
   Macs get the x64 build but have not been tried.
+- **Firmware:** the startup identity check accepts build 0.1.5.7 (firmware
+  2.0.1, fully verified) and build 0.1.5.3 (firmware 2.0, the first Expansion
+  Pack release, added from a user report — see the table below). Anything
+  else is refused on purpose; the gate is a hardware-safety measure.
+
+### Compatibility reports
+
+| Mac | macOS | Rack firmware | Result | Reported by |
+|---|---|---|---|---|
+| MacBook Pro M1 Max | 26.6.2 | 2.0.1 (build 0.1.5.7) | Works, full session | author |
+| MacBook Pro M4 | Tahoe | 2.0 (build 0.1.5.3) | Works | kdbo (PR #1) |
+
+Add yours: open an issue with your Mac, macOS version and the rack's
+reported build (the splash screen shows it if the check fails).
 - The app is not code-signed with an Apple Developer ID (there is no paid
   certificate behind this project). On first launch macOS will say it can't
   verify the app: **right-click → Open → Open**, or allow it under System

@@ -3778,6 +3778,18 @@ v1.0.0 — PUBLIC RELEASE (2026-09-09). The final push to main renumbered the
   reserved public-release version. Code complete. No protocol/behaviour change
   in the renumber itself; the dated 1.4.xx entries below remain accurate history.
 
+2026-09-11 (FIRMWARE ALLOW-LIST + CSC_NAME, PR #1 by kdbo, merged). state.js
+  EXPECTED_FIRMWARE_BUILD -> EXPECTED_FIRMWARE_BUILDS = ['0157','0153'];
+  handleIdentityReply uses .includes; showFirmwareGate passes expectedBuilds
+  (array) to splash.html which renders "0.1.5.7 or 0.1.5.3". 0153 = firmware
+  2.0 (first ERXP release), added on a real-hardware report (MacBook Pro M4,
+  macOS Tahoe, "everything works") — NOT exercised against the full command
+  set the way 0157 was; still an allow-list, never a loosened check. Also
+  scripts/release-mac.sh: sed now strips the "Developer ID Application: "
+  prefix so CSC_NAME is the bare identity name (reporter saw electron-builder
+  fall back to ad-hoc with the prefixed form). First outside compatibility
+  report — README now carries a Compatibility table.
+
 2026-09-10 (RACK LOOK — Settings > Look: Rack (default) / Classic). New
   src/css/rack-skin.css (all rules scoped to body.rack-skin: faceplate +
   fixed rack-ear pseudo-elements, cap-screw corners via layered radial
