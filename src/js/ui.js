@@ -3358,11 +3358,11 @@ function dotBuild(s) { return s ? s.split('').join('.') : s; }
 
 function showFirmwareGate(versionSeen) {
   appLog('Firmware gate: build ' + (versionSeen || '(no reply)') +
-         ' — does not match expected ' + EXPECTED_FIRMWARE_BUILD + ' — blocking');
+         ' — does not match allowed ' + EXPECTED_FIRMWARE_BUILDS.join('/') + ' — blocking');
   if (window.electronAPI) window.electronAPI.splashShowGate({
     reason: 'firmware',
     reportedBuild: versionSeen ? dotBuild(versionSeen) : null,
-    expectedBuild: dotBuild(EXPECTED_FIRMWARE_BUILD)
+    expectedBuilds: EXPECTED_FIRMWARE_BUILDS.map(dotBuild)
   });
 }
 // Java-missing gate (2026-09-05) — see the bridge-status handler below,

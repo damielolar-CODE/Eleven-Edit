@@ -16,7 +16,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 PROFILE="${APPLE_KEYCHAIN_PROFILE:-elevenedit-notary}"
-IDENT="$(security find-identity -v -p codesigning | grep -m1 'Developer ID Application' | sed -E 's/.*"(.*)"/\1/' || true)"
+IDENT="$(security find-identity -v -p codesigning | grep -m1 'Developer ID Application' | sed -E 's/.*"Developer ID Application: (.*)"/\1/' || true)"
 [ -n "$IDENT" ] || { echo "No 'Developer ID Application' certificate in the keychain — see the setup notes at the top of this script."; exit 1; }
 xcrun notarytool history --keychain-profile "$PROFILE" >/dev/null 2>&1 || { echo "No notarytool keychain profile '$PROFILE' — run: xcrun notarytool store-credentials $PROFILE"; exit 1; }
 echo "Signing as: $IDENT"

@@ -390,15 +390,19 @@ let appRevealed         = false;
 // Firmware identity check (2026-08-28) — a standard MIDI Universal SysEx
 // Identity Request/Reply, confirmed via a cold-start Wireshark capture to
 // report the firmware build as plain ASCII in its last 4 bytes ("0157" =
-// Build 0.1.5.7, the only firmware Eleven Edit has ever been built/tested
-// against). Gates the startup reveal alongside the chain-map/nav-pull
-// checks — HARDWARE SAFETY, not cosmetics: CMD 0x37 (To Amp Source) is
-// confirmed to brick the rack on assert, and this app has no way to know
-// what an untested older firmware's memory layout looks like for any
-// command it sends. FAILS CLOSED: no reply within the timeout, or any
-// reply that doesn't match exactly, blocks the reveal — see
-// checkInitialPopulateReady/armFirmwareCheckTimeout (transport.js).
-const EXPECTED_FIRMWARE_BUILD    = '0157';
+// Build 0.1.5.7, firmware v2.0.1). Gates the startup reveal alongside the
+// chain-map/nav-pull checks — HARDWARE SAFETY, not cosmetics: CMD 0x37
+// (To Amp Source) is confirmed to brick the rack on assert, and this app
+// has no way to know what an untested older firmware's memory layout
+// looks like for any command it sends. FAILS CLOSED: no reply within the
+// timeout, or any reply that isn't in the allowlist below, blocks the
+// reveal — see checkInitialPopulateReady/armFirmwareCheckTimeout
+// (transport.js).
+// "0153" (Build 0.1.5.3, firmware v2.0 — the first ERXP release) added
+// 2026-09-11 on a user report of their rack's reported build; NOT
+// independently verified against this app's command set the way 0157
+// was — see CONTRIBUTING.md.
+const EXPECTED_FIRMWARE_BUILDS   = ['0157', '0153'];
 // Must match main.js's MIN_JAVA_MAJOR_VERSION — display-only value, the
 // actual enforcement runs main-process-side before the bridge ever spawns.
 const MIN_JAVA_VERSION_DISPLAY   = 25;
