@@ -160,16 +160,17 @@
       // offering that button would just invite a repeat of the same
       // block. Quit is the only real option until Eleven Edit is
       // confirmed against whatever firmware this unit is running.
-      // reportedBuild/expectedBuild come pre-formatted ("0.1.5.7") from
+      // reportedBuild/expectedBuilds come pre-formatted ("0.1.5.7") from
       // showFirmwareGate (ui.js) rather than hardcoded here, so this
       // text can never drift out of sync with the actual comparison
       // value in state.js.
       var reportedLine = data.reportedBuild
         ? 'This system reported back firmware build "' + data.reportedBuild + '."'
         : 'This system did not respond to the firmware version check.';
+      var expectedList = (data.expectedBuilds || []).join(' or ');
       gateMsg.innerHTML = reportedLine +
-        '<br><br>Eleven Edit was built and tested specifically for ' +
-        'firmware Version 2.0.1, Build ' + data.expectedBuild + '.' +
+        '<br><br>Eleven Edit is only confirmed for firmware Build ' + expectedList +
+        ' (Versions 2.0 / 2.0.1).' +
         '<br><br>Running against unverified firmware is not supported.' +
         '<br><br>Click Quit to close.';
       retryBtn.style.display = 'none';

@@ -539,12 +539,12 @@ function handleIdentityReply(data) {
     const revBytes = data.slice(data.length - 5, data.length - 1); // 4 bytes before F7
     const revString = Array.from(revBytes).map(b => String.fromCharCode(b)).join('');
     firmwareVersionSeen = revString;
-    firmwareOk = (revString === EXPECTED_FIRMWARE_BUILD);
+    firmwareOk = EXPECTED_FIRMWARE_BUILDS.includes(revString);
     firmwareCheckDone = true;
     clearTimeout(firmwareCheckTimer);
     appLog('Firmware identity reply: build "' + revString + '"' +
-           (firmwareOk ? ' (matches expected ' + EXPECTED_FIRMWARE_BUILD + ')'
-                       : ' — DOES NOT MATCH expected ' + EXPECTED_FIRMWARE_BUILD));
+           (firmwareOk ? ' (matches allowed ' + EXPECTED_FIRMWARE_BUILDS.join('/') + ')'
+                       : ' — DOES NOT MATCH allowed ' + EXPECTED_FIRMWARE_BUILDS.join('/')));
     if (typeof checkInitialPopulateReady === 'function') checkInitialPopulateReady();
   } catch(e) { appLog('handleIdentityReply error: ' + e.message); }
 }
