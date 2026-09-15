@@ -3802,6 +3802,26 @@ v1.0.0 — PUBLIC RELEASE (2026-09-09). The final push to main renumbered the
   fall back to ad-hoc with the prefixed form). First outside compatibility
   report — README now carries a Compatibility table.
 
+2026-09-15 (11 EDIT 1.1.1, test build for Dami — not released). Effects now
+  draw as real die-cast pedals (studio.css .pedal: painted brushed enclosure
+  with corner screws, in/out jacks, italic name plate with a category glyph,
+  MODEL display, recessed control plate with silk-screened groups, rubber
+  stomp zone with a chrome footswitch + jewel LED; vol/wah get a treadle).
+  Colour and glyph come from the block's MODEL NAME, not its slot:
+  studio-ui.js catFor(dom, modelName) -> dist/delay/reverb/mod/comp/eq/
+  pitch/wah/vol/loop/amp, CAT_COLOR / iconSvg(cat). The same category icons
+  fill the signal-path tiles (.thumb-ico inside .chain-thumb-placeholder)
+  with the model name underneath (.thumb-model), refreshed by
+  syncChainIcons() from currentChain + MODEL_NAMES; INPUT and STEREO tiles
+  get their own icons. Buttons relabelled so the patch import/export is
+  obvious: "Save / Export ▾" (Save to rack slot… / Export patch to disk
+  (.tfx)…), "Import patch…" (= Load TFX), "Export all patches…", "Import
+  patches…" — same ids and handlers. Verified in a static preview of src/
+  (scratch shim replacing electronAPI + WebSocket, served on :8765, chain
+  seeded by hand) because the installed 11 Edit held the single-instance
+  lock; do NOT run the dev app or the smoke scripts while the installed app
+  is open — they pkill its bridge.
+
 2026-09-15 (11 EDIT 1.1.0 — the Mac build is now named "11 Edit": productName,
   DMG/app names 11-Edit-<ver>-macOS-<arch>.dmg, window title, wordmark,
   About. package name "eleven-edit" and appId unchanged — and since Electron

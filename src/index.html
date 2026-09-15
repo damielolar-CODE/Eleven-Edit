@@ -2099,18 +2099,18 @@
        Load, Export, Import — single-patch ops before whole-bank ops. -->
   <!-- SAVE ▾ consolidated button -->
   <div style="position:relative;">
-    <button class="bt-btn" id="btn-save-menu">Save ▾</button>
+    <button class="bt-btn" id="btn-save-menu" title="Save the current patch to a rack slot, or export it to disk as a .tfx file">Save / Export ▾</button>
     <div id="save-dropdown">
-      <div class="save-dd-item" id="save-dd-rack">Save to Rack…</div>
-      <div class="save-dd-item" id="save-dd-disk">Save to Disk</div>
+      <div class="save-dd-item" id="save-dd-rack">Save to rack slot…</div>
+      <div class="save-dd-item" id="save-dd-disk">Export patch to disk (.tfx)…</div>
       <div class="save-dd-item" id="save-dd-cancel">Cancel</div>
     </div>
   </div>
-  <button class="bt-btn" id="btn-load-tfx"       title="Load a TFX file into hardware memory (does not commit to slot)">Load TFX…</button>
+  <button class="bt-btn" id="btn-load-tfx"       title="Import a patch: load a .tfx file into the rack (edit buffer — Save to Rack to keep it in a slot)">Import patch…</button>
   <div class="bt-sep"></div>
-  <button class="bt-btn" id="btn-export-all-rigs" title="Pull all 104 slots and write TFX + XML + zip to disk">Export All Rigs…</button>
-  <button class="bt-btn" id="btn-import-rigs"     title="Read a bank XML or ZIP and write its listed patches directly to their slots">Import Rigs…</button>
-  <button class="bt-btn" id="btn-rig-balance"     title="Even out Rig Volume across all 104 user rigs by ear, with a proper abort (Discard)">Rig Balancing…</button>
+  <button class="bt-btn" id="btn-export-all-rigs" title="Pull all 104 slots and write TFX + XML + zip to disk">Export all patches…</button>
+  <button class="bt-btn" id="btn-import-rigs"     title="Read a bank XML or ZIP and write its listed patches directly to their slots">Import patches…</button>
+  <button class="bt-btn" id="btn-rig-balance"     title="Even out Rig Volume across all 104 user rigs by ear, with a proper abort (Discard)">Rig balancing…</button>
   <button class="bt-btn" id="btn-capture-now"    title="Pull current patch from hardware and save TFX file" style="display:none;">Capture Current Patch</button>
   <button class="bt-btn" id="btn-open-captures"  title="Open the folder where TFX captures are saved" style="display:none;">Open Captures Folder</button>
   <button class="bt-btn" id="btn-change-captures" title="Change the captures folder location" style="display:none;">Change Folder</button>

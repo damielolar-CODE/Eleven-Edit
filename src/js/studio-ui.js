@@ -68,6 +68,79 @@
   const PEDAL_DOM = { 'panel-vol': 'vol', 'panel-wah': 'wah', 'panel-dist': 'dist', 'panel-fxloop': 'fxloop', 'panel-delay': 'delay', 'panel-reverb': 'reverb' };
   const PANEL_IDS = ['panel-ampcab', 'panel-other', 'panel-dist', 'panel-reverb', 'panel-wah', 'panel-vol', 'panel-fxloop', 'panel-delay', 'panel-fxhost', 'panel-settings'];
 
+  // ── Block categories: every block gets an icon and a pedal colour from its
+  // model name (the rack's MODEL_NAMES table), so a compressor in FX1 looks
+  // like a compressor, an EQ like an EQ, a wah like a treadle, and so on. ──
+  const CAT_COLOR = { dist: 'orange', delay: 'green', reverb: 'purple', mod: 'blue', comp: 'grey', eq: 'yellow', pitch: 'pink', wah: 'black', vol: 'chrome', loop: 'grey', stomp: 'teal', amp: 'black' };
+  const CAT_HEX = { dist: '#ee7a1e', delay: '#4f8b35', reverb: '#7a55b8', mod: '#3468b8', comp: '#767d87', eq: '#e6b91e', pitch: '#e0568e', wah: '#2a2d33', vol: '#b8bec6', loop: '#767d87', stomp: '#2f8a84', amp: '#2a2d33' };
+  const DOM_DEFAULT_CAT = { vol: 'vol', wah: 'wah', dist: 'dist', mod: 'mod', fx1: 'stomp', fx2: 'stomp', fxloop: 'loop', delay: 'delay', reverb: 'reverb', amp: 'amp' };
+  function catFor(dom, modelName) {
+    const n = String(modelName || '').toLowerCase();
+    if (dom === 'amp') return 'amp';
+    if (dom === 'vol' || /volume/.test(n)) return 'vol';
+    if (dom === 'wah' || /wah/.test(n)) return 'wah';
+    if (dom === 'fxloop' || /fx loop/.test(n)) return 'loop';
+    if (/comp|dyn3|limit/.test(n)) return 'comp';
+    if (/\beq\b|graphic|parametric/.test(n)) return 'eq';
+    if (/pitch|octav|harmon/.test(n)) return 'pitch';
+    if (/chorus|flang|phas|vibe|trem|roto|vibrato/.test(n)) return 'mod';
+    if (dom === 'delay' || /delay|echo/.test(n)) return 'delay';
+    if (dom === 'reverb' || /reverb|spring|hall|plate|room|\bsr\b/.test(n)) return 'reverb';
+    if (dom === 'dist' || /fuzz|dist|drive|boost/.test(n)) return 'dist';
+    if (dom === 'mod') return 'mod';
+    return 'stomp';
+  }
+  const G = 'stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"';
+  function iconSvg(cat) {
+    const c = CAT_HEX[cat] || CAT_HEX.stomp;
+    const open = '<svg class="thumb-ico" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">';
+    const box = glyph => open + '<rect x="6" y="2.5" width="16" height="23" rx="3" fill="' + c + '" stroke="rgba(0,0,0,.55)"/><rect x="8.5" y="5.5" width="11" height="7" rx="1.5" fill="rgba(0,0,0,.38)"/>' + glyph + '<circle cx="14" cy="15.5" r="1.1" fill="#ff5a4a"/><circle cx="14" cy="20.5" r="3" fill="#e6e9ee" stroke="#2a2e34"/></svg>';
+    switch (cat) {
+      case 'dist':   return box('<path d="M10 10.5 l2 -3.5 l1.5 3.5 l1.5 -3.5 l2 3.5" ' + G + '/>');
+      case 'delay':  return box('<circle cx="10.5" cy="9" r="1.7" fill="#fff"/><circle cx="14" cy="9" r="1.3" fill="#fff" opacity=".8"/><circle cx="17.2" cy="9" r=".9" fill="#fff" opacity=".6"/>');
+      case 'reverb': return box('<path d="M10 11 v-4.5 M12.5 11 v-3.3 M15 11 v-2.2 M17.5 11 v-1.2" ' + G + '/>');
+      case 'mod':    return box('<path d="M9.5 9 c1.2 -3.2 2.3 -3.2 3.5 0 s2.3 3.2 3.5 0" ' + G + '/>');
+      case 'comp':   return box('<path d="M9.5 9 h9 M11.5 7 l-2 2 l2 2 M16.5 7 l2 2 l-2 2" ' + G + '/>');
+      case 'eq':     return box('<path d="M10.5 11 v-3 M14 11 v-5 M17.5 11 v-2" ' + G + ' stroke-width="1.8"/>');
+      case 'pitch':  return box('<path d="M11 11 v-5 M9 8 l2 -2 l2 2 M17 6 v5 M15 9 l2 2 l2 -2" ' + G + '/>');
+      case 'wah':
+      case 'vol':    return open + '<rect x="3" y="18" width="22" height="6" rx="2" fill="' + c + '" stroke="rgba(0,0,0,.55)"/><path d="M5 19 L23 9 L24.5 15 L6.5 24 Z" fill="#3a3d42" stroke="#0a0a0a"/><path d="M8 20 L21 12.5" stroke="rgba(255,255,255,.35)" stroke-width="1"/></svg>';
+      case 'loop':   return open + '<rect x="4" y="8" width="20" height="12" rx="3" fill="' + c + '" stroke="rgba(0,0,0,.55)"/><path d="M8 14 h11 M16.5 11 l3 3 l-3 3" ' + G + '/><circle cx="8" cy="14" r="1.6" fill="#fff"/></svg>';
+      case 'amp':    return open + '<rect x="3.5" y="3" width="21" height="8" rx="2" fill="#2a2d33" stroke="rgba(0,0,0,.6)"/><rect x="6" y="5.5" width="16" height="1.6" rx=".8" fill="#c9cdd3"/><rect x="3.5" y="12" width="21" height="13" rx="2" fill="#4a4030" stroke="rgba(0,0,0,.6)"/><circle cx="10" cy="18.5" r="3.6" fill="#1a1a1a" stroke="#9aa0a8"/><circle cx="18" cy="18.5" r="3.6" fill="#1a1a1a" stroke="#9aa0a8"/></svg>';
+      case 'input':  return open + '<rect x="9" y="3" width="10" height="9" rx="2" fill="#c9cdd3" stroke="rgba(0,0,0,.6)"/><rect x="12" y="12" width="4" height="8" fill="#9aa0a8"/><rect x="11" y="20" width="6" height="5" rx="1.5" fill="#e6e9ee" stroke="rgba(0,0,0,.5)"/></svg>';
+      case 'stereo': return open + '<circle cx="10" cy="14" r="6.5" fill="none" stroke="#4ade80" stroke-width="1.8"/><circle cx="18" cy="14" r="6.5" fill="none" stroke="#4ade80" stroke-width="1.8"/></svg>';
+      default:       return box('');
+    }
+  }
+  function ensureTileParts(slot) {
+    const ph = slot.querySelector('.chain-thumb-placeholder'); if (!ph) return null;
+    let model = slot.querySelector('.thumb-model');
+    if (!model) { model = mk('span', { class: 'thumb-model' }); slot.querySelector('.chain-thumb').insertAdjacentElement('afterend', model); }
+    return { ph: ph, model: model };
+  }
+  function syncChainIcons() {
+    const chain = (typeof currentChain !== 'undefined' && Array.isArray(currentChain)) ? currentChain : [];
+    const byDom = {};
+    chain.forEach(b => {
+      const dom = (typeof SLOT_ID_TO_DOM !== 'undefined' && SLOT_ID_TO_DOM[b.slotId]) || ((typeof SLOT_AMP !== 'undefined' && b.slotId === SLOT_AMP) ? 'amp' : null);
+      if (dom) byDom[dom] = (typeof MODEL_NAMES !== 'undefined' && MODEL_NAMES[b.modelId]) || '';
+    });
+    document.querySelectorAll('#chainstrip .chain-slot, #chainstrip .chain-slot-stack').forEach(slot => {
+      const name = slot.querySelector('.chain-name[data-slot], #chain-amp');
+      if (!name) return;
+      const dom = name.dataset.slot || 'amp';
+      const parts = ensureTileParts(slot); if (!parts) return;
+      const modelName = dom === 'amp' ? ((typeof currentAmpName !== 'undefined' && currentAmpName) || '') : (byDom[dom] || '');
+      const cat = (dom === 'amp' || dom in byDom) ? catFor(dom, modelName) : (DOM_DEFAULT_CAT[dom] || 'stomp');
+      if (parts.ph.dataset.cat !== cat) {
+        parts.ph.dataset.cat = cat;
+        const old = parts.ph.querySelector('svg.thumb-ico'); if (old) old.remove();
+        parts.ph.insertAdjacentHTML('beforeend', iconSvg(cat));
+      }
+      if (parts.model.textContent !== modelName) { parts.model.textContent = modelName; parts.model.title = modelName; }
+    });
+  }
+
   function mk(tag, attrs, html) {
     const e = document.createElement(tag);
     if (attrs) Object.keys(attrs).forEach(k => { if (k === 'class') e.className = attrs[k]; else e.setAttribute(k, attrs[k]); });
@@ -251,6 +324,9 @@
     // ── Signal path ──
     const strip = $('chainstrip');
     strip.insertBefore(mk('span', { class: 'cap' }, 'Signal path · click a block to focus · click its name to bypass · drag to reorder'), strip.firstChild);
+    const inp = $('chain-input-wrap'), mono = $('mono-indicator');
+    if (inp) inp.closest('.chain-slot').insertAdjacentElement('afterbegin', mk('div', { class: 'tile-ico' }, iconSvg('input')));
+    if (mono) mono.closest('.chain-slot').insertAdjacentElement('afterbegin', mk('div', { class: 'tile-ico', id: 'stereo-ico' }, iconSvg('stereo')));
 
     // ── Focus: stage + side cards ──
     const main = $('main');
@@ -329,8 +405,17 @@
     // ── Effects as stompboxes ──
     Object.keys(PEDALS).forEach(id => {
       const p = $(id); if (!p) return;
-      p.classList.add('pedal', 'color-' + PEDALS[id]);
-      const foot = mk('div', { class: 'pedal-foot' }, '<span class="pedal-led"></span><button class="foot" type="button" title="Bypass / enable this block"></button><span class="pedal-hint">Bypass</span>');
+      const cat0 = DOM_DEFAULT_CAT[PEDAL_DOM[id] || 'fx1'] || 'stomp';
+      p.classList.add('pedal', 'color-' + (CAT_COLOR[cat0] || 'blue'));
+      const hdr = p.querySelector('.scard-hdr');
+      if (hdr) { const g = mk('div', { class: 'pedal-glyph', 'data-cat': cat0 }, iconSvg(cat0)); hdr.insertAdjacentElement('afterbegin', g); }
+      if (id === 'panel-vol' || id === 'panel-wah') {
+        const t = mk('div', { class: 'pedal-treadle', title: 'Treadle — the position is set from the rack\'s expression pedal' });
+        if (hdr) hdr.insertAdjacentElement('afterend', t); else p.insertAdjacentElement('afterbegin', t);
+      }
+      p.appendChild(mk('span', { class: 'pedal-jack in', 'data-lbl': 'IN' }));
+      p.appendChild(mk('span', { class: 'pedal-jack out', 'data-lbl': 'OUT' }));
+      const foot = mk('div', { class: 'pedal-foot' }, '<div class="pedal-led-wrap"><span class="pedal-led"></span><span class="pedal-hint">On</span></div><button class="foot" type="button" title="Bypass / enable this block"></button><span class="pedal-hint">Bypass</span>');
       p.appendChild(foot);
       foot.querySelector('.foot').addEventListener('click', function () {
         const dom = pedalDom(id); const lbl = dom && $('chain-' + dom);
@@ -386,7 +471,7 @@
     return o.textContent.trim();
   }
   function syncAll() {
-    try { syncLCD(); syncAmp(); syncFocus(); syncMatrixSeg(); } catch (e) { /* never let a readout break the app */ }
+    try { syncLCD(); syncAmp(); syncChainIcons(); syncFocus(); syncMatrixSeg(); } catch (e) { /* never let a readout break the app */ }
   }
   function syncLCD() {
     const t = $('lcd-slot-text'); if (!t) return;
@@ -434,12 +519,13 @@
     if (title) title.textContent = name || 'Focus';
     // pedal: colour for the shared host panel, LED + fx card from the chain label
     if (pedal) {
-      if (pedal.id === 'panel-fxhost') {
-        const dom = pedalDom('panel-fxhost');
-        ['color-blue', 'color-purple'].forEach(c => pedal.classList.remove(c));
-        pedal.classList.add(dom === 'mod' ? 'color-blue' : 'color-purple');
-      }
       const dom = pedalDom(pedal.id), lbl = dom ? $('chain-' + dom) : null;
+      const msel = pedal.querySelector('.scard-hdr select');
+      const mname = (msel && msel.options[msel.selectedIndex]) ? msel.options[msel.selectedIndex].textContent.trim() : '';
+      const cat = catFor(dom, mname);
+      const color = 'color-' + (CAT_COLOR[cat] || 'blue');
+      if (!pedal.classList.contains(color)) { Array.from(pedal.classList).filter(c => c.indexOf('color-') === 0).forEach(c => pedal.classList.remove(c)); pedal.classList.add(color); }
+      const gl = pedal.querySelector('.pedal-glyph'); if (gl && gl.dataset.cat !== cat) { gl.dataset.cat = cat; gl.innerHTML = iconSvg(cat); }
       const on = !!(lbl && lbl.classList.contains('slot-on'));
       const off = !!(lbl && lbl.classList.contains('slot-off'));
       pedal.classList.toggle('on', on);
