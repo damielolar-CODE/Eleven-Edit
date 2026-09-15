@@ -1,0 +1,86 @@
+Eleven Rack Driver — Version History
+====================================
+
+The version number here matches the installer in dist/ (ElevenRackDriver-<version>.pkg)
+and the app's CFBundleShortVersionString. Newest release first.
+
+
+1.0.2  —  2026-08-10  —  General-purpose playback dropout fix
+------------------------------------------------------------
+Audio (the headline fix)
+  - Fixed the dropouts when using the Eleven Rack as an everyday output — the
+    clicks/pops/silences heard when a second app started playing (e.g. streaming
+    from Music, then a video in a browser). Root cause: the driver used a FIFO for
+    the playback transport, but Core Audio drives a device's IO as a ring buffer
+    addressed by sample time, issuing per-client WriteMix calls at each client's
+    own position. With one app the two happen to coincide; with two or more, the
+    FIFO scrambled the interleaved writes and under-delivered ~5%. Playback is now
+    a proper sample-time-addressed ring (modelled on Apple's NullAudio / the
+    open-source BlackHole driver): the plugin writes each client at its sample-time
+    position and the USB engine reads at a play head that trails the write head.
+    Verified clean with three apps playing simultaneously. Root-cause write-up in
+    docs/PLAYBACK_DROPOUT_ANALYSIS.md.
+  - Clean playback transitions: the engine prebuffers at the start of playback
+    (including right after a recording), so playback begins without a click, and
+    pausing/stopping gives clean silence rather than looping the last buffer.
+
+Menu-bar app (folded into this release)
+  - Fixed the status icon showing bright/"Active" when no Eleven Rack was
+    connected. A leftover shared ring from a previous session could keep valid
+    contents with a drifting xrun value, which was misread as a live device. The
+    app now trusts the engine's "running" flag, so a disconnected device correctly
+    shows the dimmed "device not connected" icon.
+  - Fixed the "Dropouts" indicator false-alarming during normal playback. It
+    counted capture-ring overruns, which happen harmlessly whenever nothing is
+    recording the 8-channel input; it now flags xruns only while an app is actually
+    recording.
+
+
+1.0.1  —  2026-08-08  —  Maintenance / hardening
+-------------------------------------------------
+Audio
+  - Plug-in: fixed a potential 32-bit integer overflow when computing the audio
+    buffer size — the frame count is now widened to size_t before multiplying by
+    the channel count and sample size, so large buffers can never wrap.
+
+Project / CI
+  - GitHub Actions: build check on every pull request and push, plus a tagged
+    release workflow that builds and publishes the installer automatically.
+  - CodeQL security scanning of the C/C++ (plug-in, engine, tools) and the
+    Actions workflows; all outstanding code-scanning alerts resolved.
+  - Build now stamps the plug-in, app and installer versions from a single
+    source, so every component reports the same release number.
+
+
+1.0.0  —  2026-08-06  —  Initial release
+------------------------------------------
+Audio
+  - User-space Core Audio driver for the Avid Eleven Rack on Apple Silicon.
+    No kernel extension, no DriverKit system extension, no "Reduced Security"
+    change — a signed HAL plug-in plus a small background USB engine.
+  - 8-in / 6-out, at 44.1, 48, 88.2 and 96 kHz, with the hardware clock following
+    the sample rate chosen in a DAW or Audio MIDI Setup.
+      Inputs:  Guitar In, Mic In, Eleven Rig L/R, Digital In L/R, Line In L/R
+      Outputs: Main Out L/R, Re-Amp L/R, Digital Out L/R
+  - Per-channel names shown in Audio MIDI Setup and in DAWs that read them.
+
+MIDI
+  - Works out of the box via macOS's built-in USB-MIDI driver, which exposes the
+    device as the "Eleven Rack Rig" and "Eleven Rack External" ports (in + out).
+    No bridging needed from this driver.
+
+Menu-bar app
+  - Status icon: active (streaming) / device-not-connected / engine-not-running,
+    drawn as a template so it inverts for light and dark menu bars.
+  - Full control panel: live per-channel RMS input/output meters, sample-rate
+    picker, MIDI status, "Open Audio MIDI Setup", "Restart Engine", "Launch at
+    login", and one-click "Uninstall…".
+
+Install / lifecycle
+  - Double-clickable .pkg installs the plug-in, engine, menu-bar app and a
+    per-user LaunchAgent, and restarts the audio service. Auto-starts at login.
+  - The engine releases the USB device cleanly on shutdown and never force-kills,
+    so stop/restart cannot leave the device wedged; startup rate query is time-
+    bounded so a busy coreaudiod cannot hang it.
+  - Meters use a spike-robust RMS with a short startup settle, so silent channels
+    read near zero rather than latching onto start-up transients.
