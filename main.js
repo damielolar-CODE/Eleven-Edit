@@ -9,6 +9,27 @@ const path = require('path');
 const fs   = require('fs');
 const { exec, execFile, spawn } = require('child_process');
 
+// ── App rename (1.1.0): "Eleven Edit" -> "11 Edit" ──────────────────────
+// The packaged app's data folder is named after productName, so a user
+// upgrading from 1.0.x would otherwise start with empty settings, bank cache
+// and captures folder. Move the old folder into place once, before anything
+// reads it (must run before app 'ready'). Dev runs use the package name
+// ("eleven-edit") and are unaffected.
+(function migrateUserData() {
+  try {
+    if (!app.isPackaged) return;
+    const fresh = app.getPath('userData');
+    const old = path.join(path.dirname(fresh), 'Eleven Edit');
+    if (fs.existsSync(fresh) || !fs.existsSync(old)) return;
+    fs.renameSync(old, fresh);
+    const settings = path.join(fresh, 'settings.json');
+    if (fs.existsSync(settings)) {
+      const txt = fs.readFileSync(settings, 'utf8');
+      fs.writeFileSync(settings, txt.split(old).join(fresh));
+    }
+  } catch (e) { /* a failed migration just means a clean start */ }
+})();
+
 // EXPERIMENTAL, 2026-08-03: Charlie reported a separate dark flash, sized
 // like the main window, appearing BEFORE the splash on a cold start only
 // (never on an immediate relaunch) — real PC, not the VM white-flash issue
@@ -29,7 +50,7 @@ if (process.platform === 'win32') app.setAppUserModelId('com.charleswardick.elev
 // CoreMIDI bridge (bridge-macos/ElevenRackBridge.swift) that speaks the
 // identical WebSocket protocol, so nothing in the renderer's transport
 // changes. Startup flags accept BOTH the Windows-style /FLAG and Unix-style
-// --flag forms (a Mac shell or `open -a "Eleven Edit" --args --logs` passes
+// --flag forms (a Mac shell or `open -a "11 Edit" --args --logs` passes
 // the latter naturally; /FLAG is kept so existing Windows shortcuts work).
 // ════════════════════════════════════════════════════════════════════
 const IS_MAC = process.platform === 'darwin';
@@ -180,7 +201,7 @@ function initLog() {
     // (bumped every session per Primer convention), so this banner is
     // always the actual running build, not a string someone has to remember
     // to update by hand.
-    logWrite('=== Eleven Edit (v' + app.getVersion() + ') Session Start ' +
+    logWrite('=== 11 Edit (v' + app.getVersion() + ') Session Start ' +
       now.toLocaleString() + ' ===');
     logWrite('Log: ' + logPath);
     logWrite('userData: ' + userDataPath);
@@ -203,7 +224,7 @@ function logWrite(line) {
 function logClose() {
   if (!logsEnabled) return;
   try {
-    logWrite('=== Eleven Edit Session End ===');
+    logWrite('=== 11 Edit Session End ===');
     if (logStream && !logStream.destroyed) { logStream.end(); }
     logStream = null;
   } catch(e) {}
@@ -1084,7 +1105,7 @@ ipcMain.on('startup-retry-click', function() {
 // Captures the main window's own rendering (webContents.capturePage —
 // no Screen Recording permission involved) a moment after the reveal and
 // writes a PNG. Optional --screenshot-delay=<ms> (default 1500).
-// e.g.  open -a "Eleven Edit" --args --screenshot=/tmp/ee.png
+// e.g.  open -a "11 Edit" --args --screenshot=/tmp/ee.png
 const screenshotPath = (function () {
   const a = process.argv.find(x => /^--screenshot=/.test(String(x)));
   return a ? String(a).slice('--screenshot='.length) : null;
@@ -1198,7 +1219,7 @@ function createWindow() {
     height:   winBounds.height,
     minWidth: 900,
     minHeight:600,
-    title:    'Eleven Edit',
+    title:    '11 Edit',
     // Mac: the bundle's .icns is the icon; an explicit undefined here makes
     // Electron log "Argument must be a file path or a NativeImage", so the
     // key is omitted entirely rather than set to nothing.

@@ -1,9 +1,9 @@
-ELEVEN EDIT — USER MANUAL
+11 EDIT — USER MANUAL
 ===================================================================
 
-Eleven Edit is a free patch editor for the Avid Eleven Rack guitar
-processor. It runs on your Windows PC and remote-controls
-the Eleven Rack over USB — it does not run on the rack itself, and you
+11 Edit is the Mac build of Eleven Edit, a free patch editor for the
+Avid Eleven Rack guitar processor. It runs on your Mac (or Windows PC,
+as Eleven Edit) and remote-controls the Eleven Rack over USB — it does not run on the rack itself, and you
 do not need the Avid Eleven Rack Editor or an iLok to use it.
 
 This manual covers what you need to get going and find your way around.

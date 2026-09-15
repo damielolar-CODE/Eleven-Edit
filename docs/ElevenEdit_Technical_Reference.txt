@@ -3802,6 +3802,13 @@ v1.0.0 — PUBLIC RELEASE (2026-09-09). The final push to main renumbered the
   fall back to ad-hoc with the prefixed form). First outside compatibility
   report — README now carries a Compatibility table.
 
+2026-09-15 (11 EDIT 1.1.0 — the Mac build is now named "11 Edit": productName,
+  DMG/app names 11-Edit-<ver>-macOS-<arch>.dmg, window title, wordmark,
+  About. package name "eleven-edit" and appId unchanged; main.js
+  migrateUserData() moves "~/Library/Application Support/Eleven Edit" to
+  "11 Edit" once for packaged upgrades, rewriting stored paths in
+  settings.json. The upstream project keeps its name in credits.)
+
 2026-09-15 (STUDIO INTERFACE — replaces the Rack/Classic looks; Mac build).
   New src/css/studio.css (every rule scoped to body.studio; glass panels,
   amber LCD, tile signal path, drawn amp with nine family classes fam-*,

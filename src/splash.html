@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  Eleven Edit
+  11 Edit
   Copyright (c) 2026 Charles Wardick
   SPDX-License-Identifier: MIT
   See LICENSE in the project root for full license text.
@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Eleven Edit</title>
+<title>11 Edit</title>
 <style>
   :root { --accent: #ffb000; --accent-dim: #a87400; --text: #ddd; }
   * { box-sizing: border-box; }
@@ -111,11 +111,11 @@
       // version; only fully quitting and relaunching the EXE picked up the
       // change). Quit-and-relaunch is the only real fix, so that's what the
       // message says instead of offering a button that cannot succeed.
-      gateMsg.innerHTML = 'Eleven Edit could not start its Java bridge component.' +
+      gateMsg.innerHTML = '11 Edit could not start its Java bridge component.' +
         '<br><br>This usually means Java is not installed, or is not on the ' +
-        'system PATH. Eleven Edit requires a Java runtime (JRE), version 25 ' +
+        'system PATH. 11 Edit requires a Java runtime (JRE), version 25 ' +
         'or higher, to communicate with the Eleven Rack over USB.' +
-        '<br><br>Install a Java runtime, then completely QUIT Eleven Edit ' +
+        '<br><br>Install a Java runtime, then completely QUIT 11 Edit ' +
         'and start it again (a just-installed Java will not be found without ' +
         'a full restart).';
       retryBtn.style.display = 'none';
@@ -131,26 +131,26 @@
       // Try Again HIDDEN for the exact same stale-PATH reason as the
       // missing-java case above — confirmed live the same session: updating
       // Java to 25 and clicking Try Again still reported the old version
-      // until Eleven Edit was fully quit and relaunched.
+      // until 11 Edit was fully quit and relaunched.
       var detected = data.detectedVersion
         ? 'This system has Java ' + data.detectedVersion + ' installed.'
         : 'This system\'s Java version could not be determined.';
       gateMsg.innerHTML = detected +
-        '<br><br>Eleven Edit requires Java 25 or higher. Older Java versions ' +
+        '<br><br>11 Edit requires Java 25 or higher. Older Java versions ' +
         '(including Java 8 and Java 21) have been known to freeze or crash ' +
         '(BSOD) the Windows operating system.' +
         '<br><br>Install or update to a current Java runtime, then completely ' +
-        'QUIT Eleven Edit and start it again (a just-installed Java will not ' +
+        'QUIT 11 Edit and start it again (a just-installed Java will not ' +
         'be found without a full restart).';
       retryBtn.style.display = 'none';
     } else if (data && data.reason === 'bridge') {
       // macOS (2026-09-10): the native MIDI bridge (ElevenRackBridge, bundled
-      // inside Eleven Edit.app) failed to start — nothing to do with Java on
+      // inside 11 Edit.app) failed to start — nothing to do with Java on
       // this platform. Try Again stays available: restartBridge re-spawns it.
       var detail = data.detail
         ? '<br><br><span style="opacity:0.7;">' + String(data.detail).replace(/</g, '&lt;') + '</span>' : '';
-      gateMsg.innerHTML = 'Eleven Edit could not start its MIDI bridge component (ElevenRackBridge).' +
-        '<br><br>It ships inside Eleven Edit.app — if this keeps happening, re-download Eleven Edit ' +
+      gateMsg.innerHTML = '11 Edit could not start its MIDI bridge component (ElevenRackBridge).' +
+        '<br><br>It ships inside 11 Edit.app — if this keeps happening, re-download 11 Edit ' +
         'and drag it to Applications again.' + detail +
         '<br><br>Click Try Again to relaunch the bridge. Click Quit to close.';
       retryBtn.style.display = '';
@@ -158,7 +158,7 @@
       // Firmware mismatch (2026-08-28) — Try Again is hidden here on
       // purpose: the rack's firmware won't change by rescanning, so
       // offering that button would just invite a repeat of the same
-      // block. Quit is the only real option until Eleven Edit is
+      // block. Quit is the only real option until 11 Edit is
       // confirmed against whatever firmware this unit is running.
       // reportedBuild/expectedBuilds come pre-formatted ("0.1.5.7") from
       // showFirmwareGate (ui.js) rather than hardcoded here, so this
@@ -169,7 +169,7 @@
         : 'This system did not respond to the firmware version check.';
       var expectedList = (data.expectedBuilds || []).join(' or ');
       gateMsg.innerHTML = reportedLine +
-        '<br><br>Eleven Edit is only confirmed for firmware Build ' + expectedList +
+        '<br><br>11 Edit is only confirmed for firmware Build ' + expectedList +
         ' (Versions 2.0 / 2.0.1).' +
         '<br><br>Running against unverified firmware is not supported.' +
         '<br><br>Click Quit to close.';

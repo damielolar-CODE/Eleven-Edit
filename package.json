@@ -1,7 +1,7 @@
 {
   "name": "eleven-edit",
-  "version": "1.0.0",
-  "description": "Eleven Edit \u2014 Patch navigation, TFX capture and controls for Avid Eleven Rack (Java bridge transport on Windows, native CoreMIDI bridge on macOS)",
+  "version": "1.1.0",
+  "description": "11 Edit (Eleven Edit for Mac) \u2014 Patch navigation, TFX capture and controls for Avid Eleven Rack (Java bridge transport on Windows, native CoreMIDI bridge on macOS)",
   "author": "Charles Wardick <charles.wardick@gmail.com>",
   "main": "main.js",
   "scripts": {
@@ -18,7 +18,7 @@
   },
   "build": {
     "appId": "com.wardick.rigrollerplus",
-    "productName": "Eleven Edit",
+    "productName": "11 Edit",
     "win": {
       "target": "nsis",
       "icon": "assets/icon.ico",
@@ -54,7 +54,7 @@
       "icon": "assets/icon.icns",
       "category": "public.app-category.music",
       "minimumSystemVersion": "12.0",
-      "artifactName": "Eleven-Edit-${version}-macOS-${arch}.${ext}",
+      "artifactName": "11-Edit-${version}-macOS-${arch}.${ext}",
       "extraResources": [
         {
           "from": "bridge-macos/ElevenRackBridge",
@@ -66,7 +66,7 @@
         }
       ],
       "extendInfo": {
-        "NSMicrophoneUsageDescription": "Eleven Edit reads the Eleven Rack's Rig Out audio (through the bundled Core Audio driver) to drive the VU meters. Nothing is recorded or sent anywhere."
+        "NSMicrophoneUsageDescription": "11 Edit reads the Eleven Rack's Rig Out audio (through the bundled Core Audio driver) to drive the VU meters. Nothing is recorded or sent anywhere."
       },
       "hardenedRuntime": true,
       "gatekeeperAssess": false,

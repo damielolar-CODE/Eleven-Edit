@@ -291,7 +291,7 @@
     FAMILIES.forEach(f => backline.appendChild(mk('button', { type: 'button', class: 'backline-btn fam-' + f.key, 'data-fam': f.key, title: f.name + ' — click to switch to the first ' + f.name + ' amp' }, '<i></i><i></i>')));
     ampCard.appendChild(mk('div', { class: 'kv' }, '<span class="label">Backline</span>')).appendChild(backline);
     [cabDD, micDD, axisTog, breakup, truez].forEach(c => { if (c) ampCard.appendChild(kv(c)); });
-    ampCard.appendChild(mk('div', { class: 'fine' }, '* Trademarks of their owners, not associated with Eleven Edit or Avid. Named only to identify the amp each model is based on.'));
+    ampCard.appendChild(mk('div', { class: 'fine' }, '* Trademarks of their owners, not associated with 11 Edit or Avid. Named only to identify the amp each model is based on.'));
     const fxCard = mk('div', { class: 'glass card fx-card' },
       '<h3 id="fx-card-title">Block</h3>' +
       '<div class="kv"><span class="label">Model</span><span class="val" id="fx-card-model">—</span></div>' +

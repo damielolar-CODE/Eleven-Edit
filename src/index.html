@@ -9,7 +9,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Eleven Edit</title>
+<title>11 Edit</title>
 <style>
   :root {
     --bg:          #111;
@@ -1278,7 +1278,7 @@
 <!-- ══ TOP BAR ══ -->
 <div id="topbar">
   <div>
-    <div class="app-title">Eleven Edit</div>
+    <div class="app-title">11 Edit</div>
     <div class="app-sub">Patch AUDITION &amp; EDITOR</div>
   </div>
   <div class="tdiv"></div>
@@ -2199,7 +2199,7 @@
         uploads work on Windows&nbsp;10, or on a Windows&nbsp;11 PC that hasn't taken
         the update yet.</div>
       <div style="margin-top:8px;">You can try anyway — if Microsoft has fixed it,
-        it just works, and Eleven Edit will stop warning you.</div>
+        it just works, and 11 Edit will stop warning you.</div>
     </div>
     <div class="rack-save-btns" style="flex-wrap:wrap;gap:8px;">
       <button id="win11-gate-disable">Don't show / hide upload buttons</button>
@@ -2240,7 +2240,7 @@
 
 <!-- ══ STATUS BAR ══ -->
 <div id="statusbar">
-  <span class="sb" style="display:none;">Eleven Edit</span>
+  <span class="sb" style="display:none;">11 Edit</span>
   <span class="sb acc" id="status-msg" style="display:none;">Initializing…</span>
   <span id="avid-status-badge" class="active" style="display:none;">CLOSED</span>
   <span id="avid-warn" class="sb warn" style="display:none;">AVID EDITOR: OPEN</span>
@@ -2350,8 +2350,9 @@
 <!-- ══ ABOUT ══ -->
 <div id="about-overlay">
   <div id="about-box">
-    <h2>Eleven Edit for Mac</h2>
+    <h2>11 Edit</h2>
     <div class="about-version" id="about-version">Version —</div>
+    <p style="margin:0;color:#c9d0da;font-size:13px;">The Mac build of Eleven Edit, the free editor and librarian for the Avid Eleven Rack.</p>
     <div class="about-section">
       <h3>Built by</h3>
       <p><strong>Damilola Olalere (MrDees)</strong> — the macOS port: native CoreMIDI bridge,
@@ -2397,7 +2398,7 @@
     <div class="about-section">
       <h3>Trademarks &amp; type</h3>
       <p>Amp, cabinet and effect names shown as "based on" are trademarks of their respective
-      owners, who are not associated with Eleven Edit or with Avid. They appear only to identify the
+      owners, who are not associated with 11 Edit or with Avid. They appear only to identify the
       gear whose tones the Eleven Rack models are based on. Eleven Rack is a trademark of Avid Technology.
       Type: Manrope (Mikhail Sharanda) and JetBrains Mono (JetBrains), both under the SIL Open Font License.</p>
     </div>
@@ -2406,7 +2407,7 @@
       <p>Free to use and share under the MIT License. Released to the Eleven
       Rack community with no warranty, express or implied — use at your own
       risk. Always back up your unit before loading new banks. If you build on
-      Eleven Edit, please keep Damilola Olalere, Charles Wardick, Guillaume Schmid
+      11 Edit, please keep Damilola Olalere, Charles Wardick, Guillaume Schmid
       and Matt Housley named in your credits.</p>
     </div>
     <button id="btn-about-close">CLOSE</button>
@@ -3449,7 +3450,7 @@ document.getElementById('btn-about').addEventListener('click', async function() 
 (function setTitleBarVersion() {
   if (window.electronAPI && typeof window.electronAPI.getAppVersion === 'function') {
     window.electronAPI.getAppVersion().then(function(v) {
-      document.title = 'Eleven Edit  v' + v;
+      document.title = '11 Edit  v' + v;
     }).catch(function(){});
   }
 })();
@@ -3508,7 +3509,7 @@ function maybeShowWin11StartupNotice() {
     + 'to the rack, and backups — works normally.</div>'
     + '<div style="color:#b3b3b3;margin-top:8px;">You’ll get a reminder each time you '
     + 'try to upload, and you can turn these warnings off in Settings. The same uploads work '
-    + 'on Windows&nbsp;10 or an un-updated Windows&nbsp;11; if Microsoft fixes it, Eleven Edit '
+    + 'on Windows&nbsp;10 or an un-updated Windows&nbsp;11; if Microsoft fixes it, 11 Edit '
     + 'notices the first time an upload succeeds and stops warning you.</div>');
   if (window.electronAPI && typeof window.electronAPI.setWin11StartupAck === 'function') {
     window.electronAPI.setWin11StartupAck().catch(function(){});

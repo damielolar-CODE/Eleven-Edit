@@ -27,8 +27,8 @@ rm -rf dist
 npm run build:mac
 echo "--- verification ---"
 for A in dist/mac-arm64 dist/mac; do
-  codesign --verify --deep --strict --verbose=2 "$A/Eleven Edit.app" && echo "$A: signature OK"
-  spctl --assess --type execute --verbose=2 "$A/Eleven Edit.app" && echo "$A: Gatekeeper accepts"
+  codesign --verify --deep --strict --verbose=2 "$A/11 Edit.app" && echo "$A: signature OK"
+  spctl --assess --type execute --verbose=2 "$A/11 Edit.app" && echo "$A: Gatekeeper accepts"
 done
 for D in dist/*.dmg; do xcrun stapler validate "$D" && echo "$D: notarisation ticket stapled"; done
 echo "Release DMGs: $(ls dist/*.dmg | tr '\n' ' ')"

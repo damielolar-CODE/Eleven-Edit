@@ -1,10 +1,10 @@
-# Eleven Edit
+# 11 Edit — Eleven Edit for Mac
 
-A free rig editor and librarian for the Avid Eleven Rack, controlled from your
+11 Edit is the macOS build of Charles Wardick's Eleven Edit: a free rig editor and librarian for the Avid Eleven Rack, controlled from your
 computer over USB/MIDI. No iLok and no Avid Eleven Rack Editor required —
 just the Avid USB driver and a connected Eleven Rack.
 
-> **Status:** v1.0.0 — released to the Eleven Rack community, as-is. See the
+> **Status:** 11 Edit 1.1.0 for macOS (2026-09-15) — the Studio interface, real VU meters from the bundled audio driver, knobs or sliders. Upstream Eleven Edit for Windows is v1.0.0. Released as-is. See the
 > disclaimer below and **always back up your unit before loading banks.**
 >
 > **macOS build (2026-09-10):** a native Mac port now exists — same app, same
@@ -68,7 +68,7 @@ coding assistant.
   runtime are needed.** macOS's built-in class USB-MIDI driver exposes the
   rack's two MIDI ports on its own — they appear in Audio MIDI Setup as
   **Eleven Rack Rig** (the internal port the editor protocol lives on) and
-  **Eleven Rack External** (the rear-panel DIN jacks). Eleven Edit picks
+  **Eleven Rack External** (the rear-panel DIN jacks). 11 Edit picks
   Rig in / Rig out automatically; both pickers stay user-overridable.
 - Audio over USB is a separate matter Eleven Edit doesn't touch: Avid never
   shipped an Apple Silicon audio driver, but Matt Housley's open-source
@@ -79,7 +79,7 @@ coding assistant.
   found on the Rig ports automatically and answered the full startup sweep
   (identity, patch name, chain map, 16 parameter reads) in about half a
   second. As a safety net, if a rack ever fails the identity check on the Rig
-  pair, Eleven Edit tries the other Rig/External combinations once each before
+  pair, 11 Edit tries the other Rig/External combinations once each before
   showing the firmware gate, and remembers whichever pair answered. Intel
   Macs get the x64 build but have not been tried.
 - **Firmware:** the startup identity check accepts build 0.1.5.7 (firmware

@@ -320,6 +320,6 @@ function applyMacLabels() {
     if (flags) flags.innerHTML = '<strong>--logs</strong> — enable session logging.<br>'
       + '<strong>--nogpu</strong> — force software rendering (VMs only).<br>'
       + '<strong>--t30</strong> — widen the startup timers to 30 s for a slow machine.<br>'
-      + 'Pass them from Terminal: <em>open -a "Eleven Edit" --args --logs</em>';
+      + 'Pass them from Terminal: <em>open -a "11 Edit" --args --logs</em>';
   } catch(e) {}
 }

@@ -27,9 +27,11 @@ built on different technology stacks.
 --------------------------------------------------------------------------
 macOS build (Eleven Edit for Mac)
 --------------------------------------------------------------------------
-The macOS port (native CoreMIDI bridge, Mac build, the Studio interface,
-the bundled audio driver build) was built by Damilola Olalere (MrDees) on
-top of Charles Wardick's Windows editor. Charles Wardick wrote the original editor; Guillaume Schmid's
+The macOS port, released as "11 Edit" (native CoreMIDI bridge, Mac build,
+the Studio interface, the bundled audio driver build), was built by
+Damilola Olalere (MrDees) on top of Charles Wardick's Windows editor,
+Eleven Edit. "11 Edit" names this Mac build only; the project it is built
+from remains Eleven Edit. Charles Wardick wrote the original editor; Guillaume Schmid's
 ElevenHack informed the protocol; both remain credited as requested.
 
 The macOS DMG bundles the Eleven Rack audio driver for Apple Silicon:
