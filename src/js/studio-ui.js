@@ -309,6 +309,7 @@
     const as = mk('div', { class: 'glass strip amps' }, '<span class="label">Amp section</span><div class="groups" id="master-groups"></div>');
     master.appendChild(as);
     groups.forEach(g => $('master-groups').appendChild(g));
+    if (globals) $('master-groups').appendChild(globals);
     const ms = mk('div', { class: 'glass strip meters' },
       '<div class="vus">' +
         '<div class="vu"><canvas id="vu-l" width="200" height="118"></canvas><div class="label">Rig out L</div></div>' +
@@ -319,7 +320,6 @@
     $('meter-row').appendChild($('tempo-wrap'));
     const rs = mk('div', { class: 'glass strip rig' }, '<span class="label">Rig &amp; bank</span><div id="rig-buttons"></div>');
     master.appendChild(rs);
-    if (globals) rs.appendChild(globals);
     const rb = $('rig-buttons');
     [$('btn-save-menu').parentElement, $('btn-load-tfx'), $('btn-export-all-rigs'), $('btn-import-rigs'), $('btn-rig-balance'), $('btn-patches'), $('btn-about'), $('btn-manual'), $('btn-settings')]
       .forEach(b => { if (b) rb.appendChild(b); });
