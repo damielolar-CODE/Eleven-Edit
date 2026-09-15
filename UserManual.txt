@@ -216,10 +216,6 @@ ABOUT / SETTINGS
 
     - Captures Folder — where exported rigs/patches are saved. Set
       Folder... changes it; Open Folder shows it in Windows Explorer.
-    - Avid Graphics Folder — optional. If you have the Avid Eleven Rack
-      Editor's own graphics assets on your PC, point this at that
-      folder and Scan Folder to pull in real pedal/amp thumbnail images
-      for the chain row instead of the plain text-labeled boxes.
     - Open Logs Folder — opens the folder Eleven Edit writes session
       logs to.
     - Rig-Wide Hardware Settings — Hardware Loop Global Routing and

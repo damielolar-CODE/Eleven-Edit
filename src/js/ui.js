@@ -2428,13 +2428,11 @@ function applyChainOrder(order) {
     // (currentAmpKey, state.js — the TFX '6dls' identifier), not by
     // blk.modelId, since every amp shares the same generic chain-map mid
     // (0x00 'Eleven') regardless of which of the 33 amps is loaded.
+    // Thumbnails: the placeholder box for now. The Avid-artwork loader that
+    // used to resolve a src here was removed 2026-09-14 (no third-party
+    // graphics); our own block art will plug into setChainThumbImage.
     const thumbWrap = cont.querySelector('.chain-thumb');
-    if (thumbWrap) {
-      const src = (blk.slotId === SLOT_AMP)
-        ? (typeof getAmpThumbSrc === 'function' ? getAmpThumbSrc(currentAmpKey) : null)
-        : (typeof getChainThumbSrc === 'function' ? getChainThumbSrc(blk.modelId) : null);
-      setChainThumbImage(thumbWrap, src);
-    }
+    if (thumbWrap) setChainThumbImage(thumbWrap, null);
 
     // Connector after this block: double arrow when this block outputs stereo.
     if (i < order.length - 1 && arrowIdx < arrows.length) {
@@ -2742,11 +2740,6 @@ function setCurrentAmp(key) {
     // chain-map/reorder (applyChainOrder) — an amp change (Phase 12) doesn't
     // move the chain map at all, so without this the thumbnail would lag one
     // full nav behind the dropdown/amp-name-display above it.
-    const ampThumb = document.getElementById('chain-amp');
-    if (ampThumb && typeof getAmpThumbSrc === 'function') {
-      setChainThumbImage(ampThumb.closest('.chain-slot-stack').querySelector('.chain-thumb'),
-        getAmpThumbSrc(key));
-    }
   });
   appLog('Amp identified: ' + (currentAmpName || 'unknown') + ' key=' + key);
 }

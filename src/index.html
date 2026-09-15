@@ -491,9 +491,8 @@
     color: #777; line-height: 1.2; font-family: inherit;
     pointer-events: none;
   }
-  /* 7/29: real Avid pedal/amp graphic, shown instead of the dashed
-     placeholder once chain-graphics.js resolves a src for that block's
-     model — see ui.js applyChainOrder and chain-graphics.js getChainThumbSrc. */
+  /* Block artwork image, shown instead of the dashed placeholder once our
+     own art is wired in (ui.js setChainThumbImage). */
   .chain-thumb-img { pointer-events: none; }
   .chain-name {
     background: #2a2a2a; border: 1px solid #666; color: var(--muted);
@@ -1994,18 +1993,6 @@
       </div>
     </div>
 
-    <div class="settings-row">
-      <div class="settings-row-label">Avid Graphics Folder</div>
-      <div class="settings-row-controls">
-        <button class="settings-btn" id="settings-btn-set-avid">Set Folder…</button>
-        <button class="settings-btn" id="settings-btn-scan-avid">Scan Folder</button>
-        <div class="settings-path" id="settings-avid-path">—</div>
-      </div>
-    </div>
-    <div class="settings-row">
-      <div class="settings-row-controls">
-        <div class="settings-path" id="settings-avid-scan-result">Not scanned yet.</div>
-      </div>
     </div>
 
     <div class="settings-row">
@@ -3371,9 +3358,6 @@ document.getElementById('breakup-slider').addEventListener('dblclick', function(
       window.electronAPI.getCapturesDir().then(function(d) {
         document.getElementById('settings-captures-path').textContent = d || '—';
       }).catch(function(){});
-      window.electronAPI.getAvidDir().then(function(d) {
-        document.getElementById('settings-avid-path').textContent = d || 'Not set';
-      }).catch(function(){});
     }
   }
 
@@ -3412,119 +3396,6 @@ document.getElementById('breakup-slider').addEventListener('dblclick', function(
     }).catch(function(){});
   });
 
-  // Set Avid Graphics Folder
-  document.getElementById('settings-btn-set-avid').addEventListener('click', function() {
-    if (!window.electronAPI) return;
-    window.electronAPI.browseAvidDir().then(function(res) {
-      if (res && res.ok) {
-        document.getElementById('settings-avid-path').textContent = res.dir;
-        document.getElementById('settings-avid-scan-result').textContent = 'Not scanned yet.';
-      }
-    }).catch(function(){});
-  });
-
-  // Scan Avid Graphics Folder — recursive search for the .aaxplugin image
-  // structure (main.js: scan-avid-graphics), stores the result
-  // (chain-graphics.js: setAvidGraphicsManifest) and immediately refreshes
-  // the chain row so any block with a confirmed image (see
-  // CHAIN_BLOCK_THUMB_FILE_BY_MID) swaps its dummy placeholder for the real
-  // Avid graphic without needing a patch nav.
-  // Returns a Promise<boolean> (true = graphics manifest applied) so the
-  // startup auto-scan below can retry on failure — added 2026-07-31 after
-  // Charlie hit intermittent missing chain-row graphics on load with NO
-  // trace in the logs. Root cause: a scan failure only ever updated the
-  // (usually closed) Settings panel's result text — never logged — and ran
-  // exactly once at startup with no retry, so a transient failure (AV
-  // lock, disk not settled right after boot) left placeholders for the
-  // whole session until Charlie manually re-ran Scan. Every failure path
-  // now logs via appLog so a future occurrence leaves a trace either way.
-  // Guarded the same way setAvidGraphicsManifest/renderChainRow already
-  // are below — appLog (ui.js) crashed this block with an unhandled promise
-  // rejection ("appLog is not defined") on at least one real launch,
-  // 2026-07-31, taking the whole startup scan down with it (and, per
-  // Charlie, the missing chain-row graphics symptom this was supposed to
-  // fix came back as a side effect). Root cause not fully pinned down —
-  // possibly ui.js not finished initialising yet when one of these promise
-  // callbacks fires — but every appLog call in this function was missing
-  // the typeof guard its neighbours already use; added consistently here
-  // rather than leave it to reproduce again.
-  function safeAppLog(line) { if (typeof appLog === 'function') appLog(line); }
-  function runAvidGraphicsScan(showBusy) {
-    if (!window.electronAPI) return Promise.resolve(false);
-    const resultEl = document.getElementById('settings-avid-scan-result');
-    if (showBusy && resultEl) resultEl.textContent = 'Scanning…';
-    return window.electronAPI.scanAvidGraphics().then(function(res) {
-      if (!res || !res.ok) {
-        var errMsg = (res && res.error) || 'unknown error';
-        if (resultEl) resultEl.textContent = 'Scan failed: ' + errMsg;
-        safeAppLog('Avid graphics scan failed: ' + errMsg);
-        return false;
-      }
-      const familyCount = Object.keys(res.families).length;
-      if (resultEl) resultEl.textContent = familyCount + ' plugin folder(s), ' + res.totalCount + ' PNG(s) found.';
-      safeAppLog('Avid graphics scan: ' + familyCount + ' folder(s), ' + res.totalCount + ' PNG(s), root=' + res.root);
-      if (typeof setAvidGraphicsManifest === 'function') setAvidGraphicsManifest(res);
-      if (typeof currentChain !== 'undefined' && currentChain.length && typeof renderChainRow === 'function') {
-        renderChainRow();
-      }
-      return true;
-    }).catch(function(err) {
-      var errMsg = err && err.message ? err.message : String(err);
-      if (resultEl) resultEl.textContent = 'Scan failed: ' + errMsg;
-      safeAppLog('Avid graphics scan failed: ' + errMsg);
-      return false;
-    });
-  }
-
-  document.getElementById('settings-btn-scan-avid').addEventListener('click', function() {
-    runAvidGraphicsScan(true);
-  });
-
-  // Auto-scan at startup if a folder is already set, so real graphics show
-  // up without Charlie having to open Settings and click Scan every launch.
-  // Silent (no busy text) and best-effort — a first-run app with no folder
-  // set yet just keeps the dummy placeholders, same as before.
-  // RETRY (added 2026-07-31, see runAvidGraphicsScan's header comment): up
-  // to 2 extra attempts, 3s apart, if the first attempt fails — automates
-  // exactly the "quit and try again" workaround Charlie was doing by hand.
-  // Does NOT address a slow-but-eventually-successful scan racing a fast
-  // MIDI nav pull — that ordering already self-heals on its own once the
-  // scan's own renderChainRow() call fires with the manifest in hand — this
-  // only covers an outright failed attempt going unretried.
-  //
-  // NOT CALLED HERE ANYMORE (2026-08-03) — this whole IIFE is an INLINE
-  // <script>, which runs at HTML PARSE TIME, well before the js/chain-
-  // graphics.js and js/ui.js <script src> tags at the bottom of this file
-  // even load. Calling scanAvidGraphics() here raced its own IPC round-trip
-  // against those files finishing loading: if the scan resolved first,
-  // setAvidGraphicsManifest/renderChainRow didn't exist yet, the typeof
-  // guards above silently no-op'd, and the manifest was simply never
-  // applied — a genuinely timing-dependent, intermittent miss (retrying the
-  // SAME race doesn't fix it; every retry re-runs the same premature-resolve
-  // possibility). This was very likely the real cause of the "chain row
-  // graphics sometimes blank on load" bug Charlie kept finding — root-
-  // caused, not just patched, once traced to which script tag this code
-  // actually lives in. Exposed as a function instead; app-init.js (the LAST
-  // script to load, so every dependency here is guaranteed defined by the
-  // time it runs) calls it once at the same point it already waits for
-  // other startup state to load — see app-init.js's init().
-  window.startAvidGraphicsAutoScan = function() {
-    if (!window.electronAPI) return;
-    window.electronAPI.getAvidDir().then(function(d) {
-      if (!d) return;
-      var attempt = 0;
-      function tryScan() {
-        attempt++;
-        runAvidGraphicsScan(false).then(function(ok) {
-          if (!ok && attempt < 3) {
-            safeAppLog('Avid graphics auto-scan attempt ' + attempt + ' failed, retrying in 3s');
-            setTimeout(tryScan, 3000);
-          }
-        });
-      }
-      tryScan();
-    }).catch(function(){});
-  };
 
   // Open Logs Folder
   document.getElementById('settings-btn-open-logs').addEventListener('click', function() {
@@ -3696,7 +3567,6 @@ document.getElementById('about-overlay').addEventListener('click', function(e) {
 <!-- ══ APPLICATION SCRIPTS — load order matters ══ -->
 <script src="js/state.js"></script>
 <script src="js/protocol.js"></script>
-<script src="js/chain-graphics.js"></script>
 <script src="js/ui.js"></script>
 <script src="js/fx-panels.js"></script>   <!-- per-effect-panel UI, split from ui.js 7/27 -->
 <script src="js/transport.js"></script>

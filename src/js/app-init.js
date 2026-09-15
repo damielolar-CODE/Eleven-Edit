@@ -57,23 +57,6 @@ async function init() {
     }
   } catch(e) {}
 
-  // Kick off the Avid graphics folder auto-scan (chain row pedal thumbnails)
-  // here, not from the inline <script> in index.html where it used to live —
-  // that script runs at HTML PARSE TIME, before chain-graphics.js/ui.js even
-  // load, so its scan could resolve before setAvidGraphicsManifest/
-  // renderChainRow existed and silently do nothing (the likely real cause of
-  // "chain row graphics sometimes blank on load", 2026-08-03). init() only
-  // ever runs after every script has fully loaded, so every dependency this
-  // needs is guaranteed to exist by now. Fire-and-forget — it repaints the
-  // chain row itself once the scan lands; nothing here needs to await it.
-  //
-  // (2026-08-03: briefly delayed 3s chasing a reported white flash at the
-  // splash->main reveal. CONFIRMED UNRELATED same day — reproduces only on
-  // VMs (virtualized/software GPU rendering, a known-for-years Chromium
-  // compositor bug, not this app). Reverted to firing immediately — the
-  // delay was making the chain-row graphics noticeably slower to appear for
-  // no actual benefit.)
-  if (typeof startAvidGraphicsAutoScan === 'function') startAvidGraphicsAutoScan();
 
   // Check /LOGS flag — show/hide log UI elements accordingly
   try {

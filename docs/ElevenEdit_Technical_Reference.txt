@@ -3778,6 +3778,18 @@ v1.0.0 — PUBLIC RELEASE (2026-09-09). The final push to main renumbered the
   reserved public-release version. Code complete. No protocol/behaviour change
   in the renumber itself; the dated 1.4.xx entries below remain accurate history.
 
+2026-09-14 (AVID ARTWORK LOADER REMOVED). The chain-row thumbnail feature
+  that loaded Avid's own pedal/amp/cab PNGs from a local Eleven Rack Editor
+  install is gone: src/js/chain-graphics.js (the 44-filename mapping tables
+  + getChainThumbSrc/getAmpThumbSrc/getCabThumbSrc), main.js browse-avid-dir
+  / get-avid-dir / scan-avid-graphics + the .aaxplugin walker, preload.js
+  bridges, the Settings "Avid Graphics Folder" rows and handlers, the
+  app-init auto-scan, and the ui.js src resolution. No Avid image was ever
+  bundled (the repo's only images are our icon and screenshot); the loader
+  read them from the user's Avid install. Placeholders remain until our own
+  block art lands with the UI v2 build. setChainThumbImage stays as the
+  hook for that.
+
 2026-09-11 (FIRMWARE ALLOW-LIST + CSC_NAME, PR #1 by kdbo, merged). state.js
   EXPECTED_FIRMWARE_BUILD -> EXPECTED_FIRMWARE_BUILDS = ['0157','0153'];
   handleIdentityReply uses .includes; showFirmwareGate passes expectedBuilds
