@@ -154,6 +154,14 @@ version in use refuses to run Electron's post-install script, run
 generated from the same drawing code as the Windows icon with
 `npm run icons:mac` (needs Pillow).
 
+**Audio driver (bundled):** the DMG carries `Install Eleven Rack Audio
+Driver.pkg`, the Eleven Edit build of [Matt Housley's user-space Core Audio
+driver](https://github.com/Matt-Housley/eleven-rack-driver) (MIT, vendored under
+`driver/`). It makes the rack an 8-in / 6-out Core Audio device on Apple
+Silicon (macOS 13+). `npm run build:driver` builds it; `npm run test:driver`
+runs the playback-servo simulation. What changed versus upstream is in
+`driver/History.txt` under 1.2.0.
+
 **Signed + notarised release** (no Gatekeeper prompt for users): once a
 "Developer ID Application" certificate is in the keychain and a `notarytool`
 keychain profile exists (one-time steps documented at the top of

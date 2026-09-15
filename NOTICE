@@ -25,6 +25,22 @@ copied, ported, or incorporated; the two projects share no source and are
 built on different technology stacks.
 
 --------------------------------------------------------------------------
+macOS build (Eleven Edit for Mac)
+--------------------------------------------------------------------------
+The macOS port (native CoreMIDI bridge, Mac build, Rack/Console looks) was
+built by Damilola Olalere (MrDees) on top of Charles Wardick's Windows
+editor. Charles Wardick wrote the original editor; Guillaume Schmid's
+ElevenHack informed the protocol; both remain credited as requested.
+
+The macOS DMG bundles the Eleven Rack audio driver for Apple Silicon:
+
+    Matt Housley -- Eleven Rack Driver (2026), MIT License
+    https://github.com/Matt-Housley/eleven-rack-driver
+
+vendored under driver/ (see driver/LICENSE and driver/README-ELEVEN-EDIT.md)
+with Eleven Edit's playback fixes on top (driver/History.txt, 1.2.0).
+
+--------------------------------------------------------------------------
 A request to anyone building on this project
 --------------------------------------------------------------------------
 If you create a derivative work, please keep both Charles Wardick and

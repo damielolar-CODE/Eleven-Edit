@@ -7,12 +7,14 @@
   "scripts": {
     "start": "electron .",
     "build": "electron-builder --win --x64",
-    "build:mac": "bash bridge-macos/build.sh && electron-builder --mac --arm64 --x64",
+    "build:mac": "bash bridge-macos/build.sh && bash scripts/build-driver-pkg.sh && electron-builder --mac --arm64 --x64",
     "bridge:mac": "bash bridge-macos/build.sh",
     "test:bridge:mac": "bash bridge-macos/tests/run-smoke.sh",
     "icons:mac": "python3 tools/gen_icns.py",
     "pack": "electron-builder --dir",
-    "release:mac": "bash scripts/release-mac.sh"
+    "release:mac": "bash scripts/release-mac.sh",
+    "build:driver": "bash scripts/build-driver-pkg.sh",
+    "test:driver": "clang -O2 -o /tmp/erplay_sim driver/ElevenRackBridge/tests/erplay_sim.c -I driver/ElevenRackBridge -lm && /tmp/erplay_sim"
   },
   "build": {
     "appId": "com.wardick.rigrollerplus",
@@ -70,15 +72,25 @@
       "contents": [
         {
           "x": 130,
-          "y": 220
+          "y": 170
         },
         {
           "x": 410,
-          "y": 220,
+          "y": 170,
           "type": "link",
           "path": "/Applications"
+        },
+        {
+          "x": 270,
+          "y": 330,
+          "type": "file",
+          "path": "dist/driver/Install Eleven Rack Audio Driver.pkg"
         }
-      ]
+      ],
+      "window": {
+        "width": 540,
+        "height": 440
+      }
     },
     "files": [
       "main.js",
