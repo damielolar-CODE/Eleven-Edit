@@ -159,20 +159,52 @@ AUTO ADVANCE
   PAUSE and STOP are available at any time.
 
 
-LOOK (RACK / CLASSIC)
+THE STUDIO INTERFACE (MAC)
 --------------------------------------------------
 
-  Eleven Edit has two looks. The default "Rack" look styles the window as
-  a rack-mounted unit: rack ears, screwed-in panels, a blue LCD showing the
-  patch name, LED push-buttons, Neve-style knobs and a VU meter in the top
-  bar. The knob caps are colour-coded the way a Neve console does it: red
-  for gain and level controls, blue for tone controls, grey for the gate.
-  The VU needle follows the MAIN output volume (the rack does not send
-  audio levels over MIDI) and flicks on every message from the rack, so a
-  moving needle and a blinking PEAK light mean the link is alive.
+  The Mac build lays the editor out as a glass console, top to bottom:
 
-  Prefer the original flat look? Click the gear button (bottom right),
-  find "Look" and choose Classic. The choice is remembered.
+  TOP BAR — the amber display shows the slot, the patch name and the
+  amp, cab and mic in use. Click the name to rename it. Click the left
+  half of the display for the user patch list, the right half for the
+  factory list. Bank and Patch step through the rack; Input and Tuner
+  are the rack's own.
+
+  SIGNAL PATH — one tile per block, with a green light when the block
+  is active. Click a tile to bring it into focus, click its name to
+  bypass or enable it, drag it to change the order.
+
+  FOCUS — the amp is drawn on a stage with its tone knobs on its own
+  panel (Bright, Tremolo and Sync appear when the amp has them; the
+  small lock / reset / # buttons control knob order and numeric
+  readouts). The card beside it holds the amp model, what the model is
+  based on, the backline thumbnails (click one to switch to that family
+  of amps), cabinet, mic, axis, speaker breakup and True-Z. An effect
+  opens as a stompbox: its knobs and switches are the real parameters,
+  the footswitch bypasses it, and the card beside it shows the model and
+  state with a "Back to the amp" button.
+
+  MASTER SECTION — gate, To Amp 1/2 with their sources, amp out and rig
+  volume; two VU meters; phones and main volume with their mutes; tempo;
+  the rig & bank buttons (Save, Load TFX, Export all rigs, Import rigs,
+  Rig balancing, Patches, About, Manual, Settings); and the two global
+  switches, Cab Always Off and Cabinet Resonance.
+
+  Knob caps are colour-coded the way a Neve console does it: red for
+  gain and level, blue for tone, grey for the gate. The orange arc shows
+  the value; the small amber mark is the value the patch loaded with —
+  double-click to go back to it. Drag up and down or scroll to adjust.
+
+  VU METERS — with the bundled audio driver installed, the meters show
+  the real Eleven Rig L/R output level straight from the driver (no
+  microphone permission, nothing recorded). Without it, the needle sits
+  at the MAIN output volume and flicks on every message from the rack,
+  and the caption under the meters says so.
+
+  SETTINGS — Controls lets you choose rotary knobs or vertical sliders
+  (same drag, scroll and double-click either way). Window size scales
+  the whole interface. The captures folder, logs and the two rig-wide
+  hardware settings live here too. Choices are remembered.
 
 
 SAVING AND LOADING

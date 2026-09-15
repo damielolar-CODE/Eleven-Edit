@@ -27,9 +27,9 @@ built on different technology stacks.
 --------------------------------------------------------------------------
 macOS build (Eleven Edit for Mac)
 --------------------------------------------------------------------------
-The macOS port (native CoreMIDI bridge, Mac build, Rack/Console looks) was
-built by Damilola Olalere (MrDees) on top of Charles Wardick's Windows
-editor. Charles Wardick wrote the original editor; Guillaume Schmid's
+The macOS port (native CoreMIDI bridge, Mac build, the Studio interface,
+the bundled audio driver build) was built by Damilola Olalere (MrDees) on
+top of Charles Wardick's Windows editor. Charles Wardick wrote the original editor; Guillaume Schmid's
 ElevenHack informed the protocol; both remain credited as requested.
 
 The macOS DMG bundles the Eleven Rack audio driver for Apple Silicon:
@@ -39,6 +39,17 @@ The macOS DMG bundles the Eleven Rack audio driver for Apple Silicon:
 
 vendored under driver/ (see driver/LICENSE and driver/README-ELEVEN-EDIT.md)
 with Eleven Edit's playback fixes on top (driver/History.txt, 1.2.0).
+
+The Mac build bundles two typefaces under the SIL Open Font License 1.1
+(src/fonts/, licence texts alongside):
+
+    Manrope -- Copyright 2018 The Manrope Project Authors (Mikhail Sharanda)
+    JetBrains Mono -- Copyright 2020 The JetBrains Mono Project Authors
+
+Amp, cabinet and effect names shown as "based on" in the interface are
+trademarks of their respective owners, who are not associated with this
+project or with Avid; they identify the gear whose tones the Eleven Rack
+models are based on. Eleven Rack is a trademark of Avid Technology.
 
 --------------------------------------------------------------------------
 A request to anyone building on this project

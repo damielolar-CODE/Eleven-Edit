@@ -150,3 +150,6 @@ docs/ElevenEdit_Archive.txt
 bridge-macos/ElevenRackBridge
 bridge-macos/ElevenRackBridge-arm64
 bridge-macos/ElevenRackBridge-x86_64
+
+# built helpers (bridge-macos/build.sh)
+bridge-macos/erlevels

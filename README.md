@@ -194,22 +194,51 @@ jar --create --file ElevenRackBridge.jar --main-class ElevenRackBridge ElevenRac
 This writes `ElevenRackBridge.jar` in the repo root, where `npm run build`
 picks it up. The intermediate `*.class` files can be deleted afterwards.
 
-## Looks
+## The Studio interface (macOS build, 2026-09-15)
 
-Two looks, switchable under Settings (the gear button) → **Look**, remembered
-between launches:
+The Mac build draws the editor as a glass console:
 
-- **Rack** (default since 2026-09-10) — a rack-mounted faceplate between two
-  rack ears, cap-screwed module panels, a blue backlit LCD for the patch name,
-  push-buttons with LED states, Neve-style knobs (red caps on gain/level
-  controls, blue on tone, grey on dynamics, the band colour on Parametric EQ)
-  and a VU meter in the top bar. The VU needle sits at the MAIN output volume
-  (the rack does not report audio level over MIDI) and twitches on every
-  incoming MIDI message, with a PEAK LED, so it doubles as a live-link
-  indicator. Implemented as `src/css/rack-skin.css` + `src/js/rack-skin.js`,
-  scoped to `body.rack-skin`, on the same DOM and knob code paths.
-- **Classic** — the original flat dark theme, byte-for-byte the pre-skin
-  stylesheet.
+- **Top bar** — an amber LCD with the slot, patch name (click to rename; left
+  half opens the user patch list, right half the factory list) and the
+  amp · cab · mic line; bank/patch steppers; input selector; tuner.
+- **Signal path** — one glass tile per block with an LED for its state. Click
+  a tile to focus it, click its name to bypass it, drag it to reorder.
+- **Focus** — the amp is drawn on a lit stage in one of nine visual families
+  (tweed, black panel, AC, plexi, lead, tread plate, blue line, RB, DC) with
+  its tone knobs, Bright/Tremolo/Sync and the knob-order dock on its own
+  panel, the cab's speaker count on the grille and the model name on the
+  plate. Next to it, one card holds the amp model, what it is based on, the
+  backline thumbnails (click one to switch family), cab, mic, axis, speaker
+  breakup and True-Z. An effect opens as a stompbox with its real knobs,
+  toggles and model picker, a footswitch that bypasses it and an LED that
+  follows the block state.
+- **Master section** — gate, To Amp 1/2 with sources, amp out and rig volume
+  on Neve-capped glass knobs (red caps on gain/level, blue on tone, grey on
+  dynamics, the band colour on Parametric EQ); two VU meters; phones and main
+  volume with mutes; tempo; the rig & bank buttons (Save, Load TFX, Export,
+  Import, Rig Balancing, Patches, About, Manual, Settings) and the two
+  global switches.
+- **Auto advance** and the status bar as before.
+
+**VU meters.** With the bundled audio driver installed the meters show the
+real Eleven Rig L/R level: `bridge-macos/erlevels` (built by
+`bridge-macos/build.sh` from `driver/ElevenRackBridge/erlevels.c`) reads the
+engine's RMS meter from the driver's shared ring and the main process streams
+it to the window about 30 times a second. No microphone permission is
+involved and nothing is recorded. Without the driver (or with the rack
+unplugged) the needle sits at the MAIN output volume and twitches on incoming
+MIDI, and the caption under the meters says which mode it is in.
+
+**Settings** (the Settings button) keeps the display choices: **Controls**
+(rotary knobs or vertical sliders, same drag / scroll / double-click-to-restore
+either way) and **Window size**, plus the captures folder, logs and the two
+rig-wide hardware settings.
+
+Implementation: `src/css/studio.css` (every rule scoped to `body.studio`) and
+`src/js/studio-ui.js`, which builds the layout by *moving* the existing
+elements into new containers, so every id and handler the editor's scripts
+rely on is unchanged. Type is Manrope and JetBrains Mono, bundled under the
+SIL Open Font License (`src/fonts/`).
 
 ## Startup flags
 

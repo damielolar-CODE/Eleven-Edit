@@ -16,6 +16,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
   onBridgeStatus:     (cb)        => ipcRenderer.on('bridge-status', (e, data) => cb(data)),
   removeBridgeStatus: ()          => ipcRenderer.removeAllListeners('bridge-status'),
 
+  // VU meter feed (macOS): Eleven Rig L/R input level read from the audio
+  // driver's shared ring by the erlevels helper — {l, r, running, rate}
+  // about 30 times a second, or {available:false} when the driver isn't there.
+  onVuLevels:         (cb)        => ipcRenderer.on('vu-levels', (e, data) => cb(data)),
+
   // Avid editor watchdog
   checkAvidEditor:     ()         => ipcRenderer.invoke('check-avid-editor'),
   startWatchdog:       (mode)     => ipcRenderer.invoke('start-watchdog', mode),

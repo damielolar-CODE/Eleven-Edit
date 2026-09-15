@@ -3802,7 +3802,49 @@ v1.0.0 — PUBLIC RELEASE (2026-09-09). The final push to main renumbered the
   fall back to ad-hoc with the prefixed form). First outside compatibility
   report — README now carries a Compatibility table.
 
-2026-09-10 (RACK LOOK — Settings > Look: Rack (default) / Classic). New
+2026-09-15 (STUDIO INTERFACE — replaces the Rack/Classic looks; Mac build).
+  New src/css/studio.css (every rule scoped to body.studio; glass panels,
+  amber LCD, tile signal path, drawn amp with nine family classes fam-*,
+  stompbox .pedal with colour classes, three-strip master section, patches
+  panel, sliders mode) and src/js/studio-ui.js, which at parse time MOVES
+  the existing elements into new containers (top bar order, #focus with
+  #focus-stage holding every #panel-* and #focus-side cards, #master with
+  the three .gate-group boxes + #globals-group + #out-vol-group + #tempo-wrap
+  + the #btoolbar buttons, #roller-strip last) — no id or handler changes,
+  so ui.js/fx-panels.js/patch-nav.js and the inline scripts are untouched
+  except: index.html body class, Settings rows (Controls: Knobs/Sliders in
+  localStorage 'ee-controls'; Window size hosts the zoom buttons; the Look
+  row is gone), #matrix-tools (User/Factory seg + name search: dims
+  non-matching cells; Factory disabled while picking a save slot), a
+  Patches button (#btn-patches -> openJumpList(0)), and the About text.
+  Knob renderer: drawGlassKnob/drawGlassFader replace the global
+  drawTickKnob binding (same dispatch trick as the rack look); the logical
+  size comes from the wrap's computed CSS width/height (--knob per context:
+  52 px on the amp, 56 px in the master section, 70 px elsewhere), Retina
+  backing store keyed by size@dpr. Mirrors: hooks wrap setCurrentAmp /
+  updateCabTypeDisplay / updateMicTypeDisplay / updateDisplay / openFxHostPanel
+  etc. plus MutationObservers (panel style, chain classes, #slot-display)
+  and a 1 s safety poll; they repaint the LCD lines, the drawn amp (family,
+  plate, speaker count from CAB_SPEAKERS), the side cards, the focus mode
+  (mode-amp / mode-fx / mode-settings) and the pedal LED. Footswitch =
+  click on the block's .chain-name (real bypass write). Backline thumbnail
+  = amp-select change event to the family's first amp.
+  VU: two canvases #vu-l/#vu-r (200x118, scale from the pivot ±46°, red
+  only 0..+3). Real level: driver/ElevenRackBridge/erlevels.c attaches
+  read-only to the driver's shared ring and prints inLevel[2]/[3] (the
+  engine's leaky RMS for Eleven Rig L/R) 30x/s; bridge-macos/build.sh
+  builds it (universal), package.json ships it next to the bridge, main.js
+  spawns it 1.5 s after app-ready (retry every 5 s on exit 2 = no ring),
+  forwards lines as 'vu-levels' IPC (preload onVuLevels); studio-ui.js
+  maps RMS -> VU with 0 VU = -18 dBFS and labels the source
+  (live / driver ready but idle / not detected -> MIDI-twitch fallback).
+  Packaging: NSMicrophoneUsageDescription (extendInfo) and
+  com.apple.security.device.audio-input added for completeness; the ring
+  path needs neither. Default window 1440x920. Dev screenshots: fake rack +
+  --screenshot-js (scratch shot.sh) — every view was checked this way.
+
+2026-09-10 (RACK LOOK — superseded 2026-09-15 by the Studio interface;
+  rack-skin.css/.js removed). Was: Settings > Look: Rack (default) / Classic. New
   src/css/rack-skin.css (all rules scoped to body.rack-skin: faceplate +
   fixed rack-ear pseudo-elements, cap-screw corners via layered radial
   gradients, LCD patch name, LED push-button family, LCD readouts) and

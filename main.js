@@ -1116,8 +1116,61 @@ function captureMainWindow() {
   }).catch(function(e) { logWrite('Screenshot failed: ' + e.message); });
 }
 
+// ── VU meter feed (macOS) ─────────────────────────────────────────────
+// bridge-macos/erlevels (driver/ElevenRackBridge/erlevels.c) prints the
+// Eleven Rig L/R input level from the audio driver's shared ring ~30x/s.
+// Spawned once the window is up; if the ring isn't there (no driver, rack
+// unplugged, engine idle) it exits 2 and we try again every few seconds, so
+// plugging the rack in later just works. Levels go to the renderer as
+// 'vu-levels' messages; nothing is recorded.
+let levelsProc = null, levelsRetry = null, levelsStopping = false;
+function levelsBinary() {
+  const candidates = [ path.join(process.resourcesPath || '', 'erlevels'),
+                       path.join(__dirname, 'bridge-macos', 'erlevels') ];
+  for (const c of candidates) { try { if (fs.existsSync(c)) return c; } catch (e) {} }
+  return null;
+}
+function sendLevels(obj) {
+  try { if (mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.send('vu-levels', obj); } catch (e) {}
+}
+function startLevels() {
+  if (process.platform !== 'darwin' || levelsProc || levelsStopping) return;
+  const bin = levelsBinary();
+  if (!bin) { sendLevels({ available: false, reason: 'helper missing' }); return; }
+  let proc;
+  try { proc = spawn(bin, ['30'], { stdio: ['pipe', 'pipe', 'pipe'] }); }
+  catch (e) { sendLevels({ available: false, reason: String(e) }); return; }
+  levelsProc = proc;
+  let buf = '', announced = false;
+  proc.stdout.on('data', function(chunk) {
+    buf += chunk.toString();
+    let idx;
+    while ((idx = buf.indexOf('\n')) !== -1) {
+      const line = buf.slice(0, idx); buf = buf.slice(idx + 1);
+      const m = /^L ([\d.]+) R ([\d.]+) run (\d+) sr (\d+)/.exec(line);
+      if (!m) continue;
+      if (!announced) { announced = true; logWrite('VU feed: erlevels attached to the audio driver ring'); }
+      sendLevels({ available: true, l: parseFloat(m[1]), r: parseFloat(m[2]), running: m[3] === '1', rate: parseInt(m[4], 10) });
+    }
+  });
+  proc.stderr.on('data', function() {});
+  proc.on('exit', function(code) {
+    levelsProc = null;
+    if (levelsStopping) return;
+    sendLevels({ available: false, reason: code === 2 ? 'driver ring not found' : ('exit ' + code) });
+    levelsRetry = setTimeout(startLevels, 5000);
+  });
+  proc.on('error', function() { levelsProc = null; if (!levelsStopping) levelsRetry = setTimeout(startLevels, 10000); });
+}
+function stopLevels() {
+  levelsStopping = true;
+  if (levelsRetry) { clearTimeout(levelsRetry); levelsRetry = null; }
+  if (levelsProc) { try { levelsProc.stdin.end(); levelsProc.kill(); } catch (e) {} levelsProc = null; }
+}
+
 ipcMain.on('app-ready', function() {
   if (screenshotPath) setTimeout(captureMainWindow, screenshotDelayMs);
+  setTimeout(startLevels, 1500);
   // Charlie reported a "massive white flash" at exactly this swap
   // (2026-08-03) — a classic Electron/Windows DWM compositor artifact when
   // a topmost frameless window (splash) is destroyed in the SAME tick a
@@ -1137,7 +1190,7 @@ ipcMain.on('app-ready', function() {
 });
 
 function createWindow() {
-  const winBounds = storeGet('windowBounds', { width: 1400, height: 800 });
+  const winBounds = storeGet('windowBounds', { width: 1440, height: 920 });
   const savedZoom = storeGet('zoomFactor', 1.0);
 
   mainWindow = new BrowserWindow({
@@ -1248,6 +1301,7 @@ app.on('window-all-closed', function() {
 
 let isReallyQuitting = false;
 app.on('before-quit', function(event) {
+  stopLevels();
   if (isReallyQuitting) return; // already cleaned up — let this one through
   event.preventDefault();
   killBridge(function() {

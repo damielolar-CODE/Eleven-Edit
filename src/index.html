@@ -1269,10 +1269,11 @@
   .rack-save-ok-btn { border-color: var(--green) !important; color: var(--green) !important; }
   .rack-save-ok-btn:hover { background: #0a2a0a !important; }
 </style>
-<!-- Rack skin (2026-09-10): the rack-mounted look, scoped to body.rack-skin (Settings > Look) -->
-<link rel="stylesheet" href="css/rack-skin.css">
+<!-- Studio look (2026-09-15): the glass console. js/studio-ui.js builds the
+     layout out of the elements below; every id stays where the scripts expect it. -->
+<link rel="stylesheet" href="css/studio.css">
 </head>
-<body class="rack-skin">
+<body class="studio">
 
 <!-- ══ TOP BAR ══ -->
 <div id="topbar">
@@ -1285,14 +1286,14 @@
   <!-- Patch navigation -->
   <div class="patch-nav">
     <div class="patch-nav-row">
-      <button class="nav-btn" id="btn-prev-bank">◀ BNK</button>
+      <button class="nav-btn" id="btn-prev-bank">◀ Bank</button>
       <div class="nav-slot" id="nav-bank-slot">A</div>
-      <button class="nav-btn" id="btn-next-bank">BNK ▶</button>
+      <button class="nav-btn" id="btn-next-bank">Bank ▶</button>
     </div>
     <div class="patch-nav-row">
-      <button class="nav-btn" id="btn-prev">◀ PCH</button>
+      <button class="nav-btn" id="btn-prev">◀ Patch</button>
       <div class="nav-slot" id="nav-patch-slot">1</div>
-      <button class="nav-btn" id="btn-next">PCH ▶</button>
+      <button class="nav-btn" id="btn-next">Patch ▶</button>
     </div>
   </div>
 
@@ -1313,11 +1314,6 @@
 
   <div class="tdiv"></div>
 
-  <!-- VU meter (rack skin only; drawn by js/rack-skin.js). Needle = MAIN
-       output volume, twitches on incoming MIDI. Hidden in the Classic look. -->
-  <div id="vu-wrap" title="Main output level (MAIN VOL) — needle twitches on MIDI activity">
-    <canvas id="vu-canvas" width="132" height="58"></canvas>
-  </div>
 
   <!-- Right side controls -->
   <div class="flex-row ml-auto" style="gap:10px;flex-shrink:0;">
@@ -1992,9 +1988,6 @@
         <div class="settings-path" id="settings-captures-path">—</div>
       </div>
     </div>
-
-    </div>
-
     <div class="settings-row">
       <div class="settings-row-controls">
         <button class="settings-btn" id="settings-btn-open-logs">Open Logs Folder</button>
@@ -2002,11 +1995,17 @@
     </div>
 
     <div class="settings-row">
-      <div class="settings-row-label">Look</div>
+      <div class="settings-row-label">Controls</div>
       <div class="settings-row-controls">
-        <button class="settings-btn settings-look-btn" data-look="rack">Rack</button>
-        <button class="settings-btn settings-look-btn" data-look="classic">Classic</button>
-        <div class="settings-path">Rack: rack-mounted faceplate, Neve-style knobs, VU meter. Classic: the original flat look.</div>
+        <button class="settings-btn settings-ctl-btn" data-ctl="knobs">Knobs</button>
+        <button class="settings-btn settings-ctl-btn" data-ctl="sliders">Sliders</button>
+        <div class="settings-path">Knobs: rotary controls with a value arc. Sliders: vertical faders. Same drag, scroll and double-click-to-restore either way.</div>
+      </div>
+    </div>
+    <div class="settings-row" id="settings-window-row">
+      <div class="settings-row-label">Window size</div>
+      <div class="settings-row-controls">
+        <div class="settings-path">Scale the whole interface down or up.</div>
       </div>
     </div>
 
@@ -2100,7 +2099,7 @@
        Load, Export, Import — single-patch ops before whole-bank ops. -->
   <!-- SAVE ▾ consolidated button -->
   <div style="position:relative;">
-    <button class="bt-btn" id="btn-save-menu">SAVE ▾</button>
+    <button class="bt-btn" id="btn-save-menu">Save ▾</button>
     <div id="save-dropdown">
       <div class="save-dd-item" id="save-dd-rack">Save to Rack…</div>
       <div class="save-dd-item" id="save-dd-disk">Save to Disk</div>
@@ -2122,9 +2121,10 @@
   <button class="bt-btn"       id="btn-rename-patch" style="display:none;" disabled>Rename Patch…</button>
   <div class="bt-sep"></div>
   <div style="margin-left:auto;"></div>
+  <button class="bt-btn" id="btn-patches" title="Open the patch list (also: click the patch name display)">Patches…</button>
   <button class="bt-btn" id="btn-about">About</button>
-  <button class="bt-btn" id="btn-manual" title="Open the User Manual">?</button>
-  <button class="bt-btn" id="btn-settings" title="Settings">⚙</button>
+  <button class="bt-btn" id="btn-manual" title="Open the User Manual">Manual</button>
+  <button class="bt-btn" id="btn-settings" title="Settings">Settings</button>
   <div id="capture-path-label" style="display:none;">Folder: —</div>
   <span id="capture-info" style="display:none;"></span>
   <span id="capture-path" style="display:none;"></span>
@@ -2256,6 +2256,10 @@
 <div id="slot-matrix">
   <div class="matrix-header">
     <div class="matrix-title">PATCH NAMES — click to jump</div>
+    <div id="matrix-tools">
+      <div class="seg"><button class="seg-btn on" id="matrix-user" type="button">User</button><button class="seg-btn" id="matrix-factory" type="button">Factory</button></div>
+      <input type="text" id="matrix-search" placeholder="Search patch names…" autocomplete="off" spellcheck="false">
+    </div>
     <button class="matrix-close-btn" id="matrix-close-btn">CLOSE</button>
   </div>
   <div id="matrix-scroll">
@@ -2346,12 +2350,22 @@
 <!-- ══ ABOUT ══ -->
 <div id="about-overlay">
   <div id="about-box">
-    <h2>Eleven Edit</h2>
+    <h2>Eleven Edit for Mac</h2>
     <div class="about-version" id="about-version">Version —</div>
     <div class="about-section">
-      <h3>Design &amp; Concept</h3>
-      <p>Charles Wardick — <a href="mailto:charles.wardick@gmail.com">charles.wardick@gmail.com</a><br>
-      Music: <a href="https://wardick.bandcamp.com" target="_blank">wardick.bandcamp.com</a></p>
+      <h3>Built by</h3>
+      <p><strong>Damilola Olalere (MrDees)</strong> — the macOS port: native CoreMIDI bridge,
+      the Studio interface, the bundled Apple Silicon audio driver build, DMG packaging and
+      hardware verification on a real Eleven Rack.<br>
+      <a href="https://github.com/damielolar-CODE/Eleven-Edit" target="_blank">github.com/damielolar-CODE/Eleven-Edit</a>
+      · <a href="https://mrdeesmusic.gumroad.com/l/eleven-edit-mac" target="_blank">mrdeesmusic.gumroad.com</a></p>
+    </div>
+    <div class="about-section">
+      <h3>Original Windows editor</h3>
+      <p><strong>Charles Wardick</strong> — Eleven Edit for Windows (MIT), the editor, protocol map
+      and patch tooling this Mac version is built from.
+      <a href="mailto:charles.wardick@gmail.com">charles.wardick@gmail.com</a> ·
+      <a href="https://wardick.bandcamp.com" target="_blank">wardick.bandcamp.com</a></p>
     </div>
     <div class="about-section">
       <h3>Architecture</h3>
@@ -2366,24 +2380,34 @@
       splash-screen white-flash bug; not needed on real hardware).</p>
     </div>
     <div class="about-section">
+      <h3>Audio driver</h3>
+      <p><strong>Matt Housley</strong> — the open-source Eleven Rack Core Audio driver (MIT) that the
+      bundled Apple Silicon driver is built on, with playback timing and stability work added for this release.
+      <a href="https://github.com/Matt-Housley/eleven-rack-driver" target="_blank">github.com/Matt-Housley/eleven-rack-driver</a></p>
+    </div>
+    <div class="about-section">
       <h3>Protocol Research Credit</h3>
-      <p>Eleven Edit's SysEx protocol map builds on earlier reverse-engineering
-      by Guillaume Schmid —
+      <p>The SysEx protocol map builds on earlier reverse-engineering by
+      <strong>Guillaume Schmid</strong> —
       <a href="https://sites.google.com/site/elevenhack/" target="_blank">ElevenHack (2013)</a>
       — gratefully acknowledged, though no code from that project is used
-      here; Eleven Edit was written independently, from scratch. The Eleven
-      Rack USB/MIDI protocol itself was re-derived through direct packet
+      here. The Eleven Rack USB/MIDI protocol itself was re-derived through direct packet
       analysis; no Avid software or source was used.</p>
+    </div>
+    <div class="about-section">
+      <h3>Trademarks &amp; type</h3>
+      <p>Amp, cabinet and effect names shown as "based on" are trademarks of their respective
+      owners, who are not associated with Eleven Edit or with Avid. They appear only to identify the
+      gear whose tones the Eleven Rack models are based on. Eleven Rack is a trademark of Avid Technology.
+      Type: Manrope (Mikhail Sharanda) and JetBrains Mono (JetBrains), both under the SIL Open Font License.</p>
     </div>
     <div class="about-section">
       <h3>For The Community</h3>
       <p>Free to use and share under the MIT License. Released to the Eleven
       Rack community with no warranty, express or implied — use at your own
-      risk. Always back up your unit before loading new banks; the author
-      isn't responsible for lost patches, corrupted banks, or gear that
-      mysteriously starts playing better than you can. If you build on
-      Eleven Edit, please keep Charles Wardick and Guillaume Schmid named in
-      your credits.</p>
+      risk. Always back up your unit before loading new banks. If you build on
+      Eleven Edit, please keep Damilola Olalere, Charles Wardick, Guillaume Schmid
+      and Matt Housley named in your credits.</p>
     </div>
     <button id="btn-about-close">CLOSE</button>
   </div>
@@ -3576,7 +3600,7 @@ document.getElementById('about-overlay').addEventListener('click', function(e) {
 <script src="js/sysex-handler.js"></script>
 <script src="js/patch-nav.js"></script>
 <script src="js/rig-balance.js"></script>   <!-- Rig Balancing level-matching mode, 2026-08-31 -->
-<script src="js/rack-skin.js"></script>     <!-- Rack look: Neve knobs + VU meter, 2026-09-10 -->
+<script src="js/studio-ui.js"></script>   <!-- Studio look: layout, knobs, VU meters, 2026-09-15 -->
 <script src="js/app-init.js"></script>
 </body>
 </html>

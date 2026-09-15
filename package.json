@@ -59,8 +59,15 @@
         {
           "from": "bridge-macos/ElevenRackBridge",
           "to": "ElevenRackBridge"
+        },
+        {
+          "from": "bridge-macos/erlevels",
+          "to": "erlevels"
         }
       ],
+      "extendInfo": {
+        "NSMicrophoneUsageDescription": "Eleven Edit reads the Eleven Rack's Rig Out audio (through the bundled Core Audio driver) to drive the VU meters. Nothing is recorded or sent anywhere."
+      },
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
       "entitlements": "build/entitlements.mac.plist",

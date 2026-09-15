@@ -15,3 +15,11 @@ codesign --force --sign - ElevenRackBridge
 chmod 755 ElevenRackBridge
 echo "OK: $(pwd)/ElevenRackBridge"
 lipo -info ElevenRackBridge
+
+# VU meter feed: reads the audio driver's shared ring (driver/ElevenRackBridge/erlevels.c).
+echo "Building erlevels (universal)..."
+clang -O2 -arch arm64 -arch x86_64 -mmacosx-version-min=${MIN_MACOS} -I ../driver/ElevenRackBridge \
+  -o erlevels ../driver/ElevenRackBridge/erlevels.c
+codesign --force --sign - erlevels
+chmod 755 erlevels
+echo "OK: $(pwd)/erlevels"
