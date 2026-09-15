@@ -11,7 +11,7 @@ APP="${1:-dist/mac-arm64/11 Edit.app}"
 [ -d "$APP" ] || { echo "no app at $APP — run npm run build:mac first"; exit 1; }
 APP="$(cd "$(dirname "$APP")" && pwd)/$(basename "$APP")"   # open(1) needs an absolute path
 OUT="${TMPDIR:-/tmp}/elevenedit-pkgsmoke"; mkdir -p "$OUT"
-LOGDIR="$HOME/Library/Application Support/11 Edit/logs"
+LOGDIR="$HOME/Library/Application Support/eleven-edit/logs"   # Electron names userData after package.json "name", not productName
 swiftc -O -suppress-warnings bridge-macos/tests/fake-rack.swift -o "$OUT/fake-rack" || exit 1
 pkill -9 -f "11 Edit.app/Contents" 2>/dev/null; pkill -x ElevenRackBridge 2>/dev/null; pkill -x fake-rack 2>/dev/null
 for i in $(seq 1 40); do pgrep -f "11 Edit.app/Contents" >/dev/null || break; perl -e 'select(undef,undef,undef,0.25)'; done

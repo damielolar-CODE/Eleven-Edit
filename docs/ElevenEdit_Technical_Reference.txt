@@ -3804,10 +3804,12 @@ v1.0.0 — PUBLIC RELEASE (2026-09-09). The final push to main renumbered the
 
 2026-09-15 (11 EDIT 1.1.0 — the Mac build is now named "11 Edit": productName,
   DMG/app names 11-Edit-<ver>-macOS-<arch>.dmg, window title, wordmark,
-  About. package name "eleven-edit" and appId unchanged; main.js
-  migrateUserData() moves "~/Library/Application Support/Eleven Edit" to
-  "11 Edit" once for packaged upgrades, rewriting stored paths in
-  settings.json. The upstream project keeps its name in credits.)
+  About. package name "eleven-edit" and appId unchanged — and since Electron
+  names userData after package.json "name", the data folder stays
+  ~/Library/Application Support/eleven-edit (verified on the packaged
+  build), so nothing migrates. The upstream project keeps its name in
+  credits. Built as 11-Edit-1.1.0-macOS-{arm64,x64}.dmg, each carrying
+  Install Eleven Rack Audio Driver.pkg; release v1.1.0-macos.)
 
 2026-09-15 (STUDIO INTERFACE — replaces the Rack/Classic looks; Mac build).
   New src/css/studio.css (every rule scoped to body.studio; glass panels,

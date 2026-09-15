@@ -10,25 +10,10 @@ const fs   = require('fs');
 const { exec, execFile, spawn } = require('child_process');
 
 // ── App rename (1.1.0): "Eleven Edit" -> "11 Edit" ──────────────────────
-// The packaged app's data folder is named after productName, so a user
-// upgrading from 1.0.x would otherwise start with empty settings, bank cache
-// and captures folder. Move the old folder into place once, before anything
-// reads it (must run before app 'ready'). Dev runs use the package name
-// ("eleven-edit") and are unaffected.
-(function migrateUserData() {
-  try {
-    if (!app.isPackaged) return;
-    const fresh = app.getPath('userData');
-    const old = path.join(path.dirname(fresh), 'Eleven Edit');
-    if (fs.existsSync(fresh) || !fs.existsSync(old)) return;
-    fs.renameSync(old, fresh);
-    const settings = path.join(fresh, 'settings.json');
-    if (fs.existsSync(settings)) {
-      const txt = fs.readFileSync(settings, 'utf8');
-      fs.writeFileSync(settings, txt.split(old).join(fresh));
-    }
-  } catch (e) { /* a failed migration just means a clean start */ }
-})();
+// Only productName changed. Electron names the userData folder after the
+// package.json "name" ("eleven-edit"), which is unchanged, so settings, bank
+// cache and captures carry over with no migration (verified: the packaged
+// 1.1.0 build logs to .../Application Support/eleven-edit).
 
 // EXPERIMENTAL, 2026-08-03: Charlie reported a separate dark flash, sized
 // like the main window, appearing BEFORE the splash on a cold start only
