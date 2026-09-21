@@ -3802,7 +3802,12 @@ v1.0.0 — PUBLIC RELEASE (2026-09-09). The final push to main renumbered the
   fall back to ad-hoc with the prefixed form). First outside compatibility
   report — README now carries a Compatibility table.
 
-2026-09-15 (11 EDIT 1.1.1, test build for Dami — not released). Effects now
+2026-09-20 (11 EDIT 2.0.0 — public release of the 1.1.1 test build, renumbered
+  2.0.0 at Dami's request ("V2"): GitHub release v2.0.0-macos, Gumroad
+  updated, customer email sent. No code change from 1.1.1 beyond the
+  version.)
+
+2026-09-15 (11 EDIT 1.1.1, test build for Dami — became 2.0.0). Effects now
   draw as real die-cast pedals (studio.css .pedal: painted brushed enclosure
   with corner screws, in/out jacks, italic name plate with a category glyph,
   MODEL display, recessed control plate with silk-screened groups, rubber

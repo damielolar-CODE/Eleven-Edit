@@ -4,7 +4,7 @@
 computer over USB/MIDI. No iLok and no Avid Eleven Rack Editor required —
 just the Avid USB driver and a connected Eleven Rack.
 
-> **Status:** 11 Edit 1.1.0 for macOS (2026-09-15) — the Studio interface, real VU meters from the bundled audio driver, knobs or sliders. Upstream Eleven Edit for Windows is v1.0.0. Released as-is. See the
+> **Status:** 11 Edit 2.0.0 for macOS (2026-09-20) — the Studio interface with effects drawn as real pedals, real VU meters from the bundled audio driver, knobs or sliders. Upstream Eleven Edit for Windows is v1.0.0. Released as-is. See the
 > disclaimer below and **always back up your unit before loading banks.**
 >
 > **macOS build (2026-09-10):** a native Mac port now exists — same app, same
